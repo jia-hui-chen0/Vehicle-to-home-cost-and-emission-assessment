@@ -1,6 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+# result visualization
+plot trb_results copy*
+activeness_1.py
+Haochi/
+Parth_request/
+PNASOVERLEAF/
+
+# 
 
 # C extensions
 *.so
