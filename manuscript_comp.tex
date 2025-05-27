@@ -1,0 +1,610 @@
+\documentclass[11pt,preprint]{elsarticle}
+
+\makeatletter
+\def\ps@pprintTitle{%
+ \let\@oddhead\@empty
+ \let\@evenhead\@empty
+ \def\@oddfoot{\centerline{\thepage}}%
+ \let\@evenfoot\@oddfoot}
+\makeatother
+
+\journal{Joule}
+
+
+\widowpenalty10000
+\clubpenalty10000
+\hyphenpenalty100
+
+\abstracttitle{Abstract}
+\bibliographystyle{elsarticle-num}
+\biboptions{numbers,sort&compress}
+
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\renewcommand{\ttdefault}{\sfdefault}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{top=30mm, bottom=35mm}
+
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage{eurosym}
+\usepackage{mathtools}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{epstopdf}
+\usepackage{xfrac}
+\usepackage{tabularx}
+\usepackage[version=4]{mhchem}
+\usepackage{bm}
+\usepackage[colorlinks]{hyperref}
+\usepackage[nameinlink,sort&compress,capitalise,noabbrev]{cleveref}
+\usepackage[leftcaption,raggedright]{sidecap}
+\usepackage{subcaption}
+\usepackage{blindtext}
+\usepackage[parfill]{parskip}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{rotating}
+\usepackage{array,tabularray,booktabs}
+\usepackage[prependcaption,textsize=scriptsize]{todonotes}
+\newcommand\rev[1]{\textcolor{black}{#1}}
+\newcommand\revco{\color{black}}
+
+\usepackage{nomencl}
+\makenomenclature
+
+\usepackage{siunitx}
+\sisetup{range-units=single, per-mode=symbol}
+\DeclareSIUnit\year{a}
+\DeclareSIUnit\tco{t_{\ce{CO2}}}
+\DeclareSIUnit\sieuro{\mbox{\euro}}
+\DeclareSIUnit\twh{TWh}
+\DeclareSIUnit\mwh{MWh}
+\DeclareSIUnit\kwh{kWh}
+
+\newcommand{\co}{\ce{CO2}~}
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{pdflscape}
+
+\usepackage[export]{adjustbox}
+
+\usepackage[resetlabels,labeled]{multibib}
+\newcites{S}{Supplementary References}
+% \bibliographystyleS{elsarticle-num}
+\bibliographystyleS{elsarticle-num}
+
+\newcommand{\onwrun}{20221227-onw}
+\newcommand{\gasrun}{20221227-gas}
+\newcommand{\decrun}{20221227-decentral}
+\newcommand{\lvrun}{20221227-lv}
+\newcommand{\costrun}{20221227-costs}
+\newcommand{\imprun}{20221227-import}
+\newcommand{\shprun}{20221227-shipping}
+\newcommand{\hyrun}{20221227-main}
+\newcommand{\gasrunscen}{20221227-gas/elec_s_181_lv1.0__Co2L0-3H-T-H-B-I-A-solar+p3-linemaxext10_2050}
+\newcommand{\runelec}{20221227-main/elec_s_181_lvopt__Co2L0-3H-T-H-B-I-A-solar+p3-linemaxext10-noH2network_2050}
+\newcommand{\runhy}{20221227-main/elec_s_181_lv1.0__Co2L0-3H-T-H-B-I-A-solar+p3-linemaxext10_2050}
+
+
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\def\cT{\mathcal{T}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\N}{\mathbb{N}}
+\def\el{${}_{\textrm{el}}$}
+\def\th{${}_{\textrm{th}}$}
+\def\hy{${}_{\textrm{H}_2}$}
+\def\deg{${}^\circ$}
+
+\usepackage{xcolor}
+\usepackage{framed}
+\definecolor{shadecolor}{rgb}{.95,.95,.95}
+\usepackage{lineno}
+\usepackage{tocloft}
+\cftsetindents{section}{1em}{2.75em}
+
+\input{variables.tex}
+
+\begin{document}
+ 
+\begin{frontmatter}
+	\title{Vehicle to Home Charging Cuts Costs and Greenhouse Gas Emissions across the US}
+    \author[umichaddress]{Jiahui Chen}
+    
+    \author[fordaddress]{James Anderson}
+    \author[fordaddress]{Robert De Kleine}
+    \author[fordaddress]{Hyung Chul Kim}
+    \author[umichaddress]{Gregory Keoleian}
+    \author[umichaddress]{Parth Vaishnav \corref{correspondingauthor}**}
+        \ead{parthtv@umich.edu}
+        \address[umichaddress]{School for Environment and Sustainability, University of Michigan, Ann Arbor, MI 48109, USA}
+        \address[fordaddress]{Ford Research and Innovation Center, 2101 Village Rd, Dearborn, MI 48124, USA}
+        
+        
+	\begin{abstract}
+		EV charging optimization including controlled charging and vehicle-to-home could reduce household energy costs and greenhouse gas (GHG) emissions. This study estimates the impact of these strategies on lifetime GHG emissions and homeowner utility bills. We develop a county-level, hourly EV energy consumption and charging model for the contiguous US. We account for the local climate in estimating vehicle energy use, as well as in estimating building energy use. We account for heterogeneity in travel needs, electricity generation mix, and the pace of grid decarbonization during the EV's lifetime. Compared to uncontrolled charging, V2H reduces both lifetime charging costs and GHG emissions across the contiguous US. The average lifetime cost reductions are \$8400 (90th percentile range of \$6300 to \$10000), and the average life-cycle emission reductions are 85tCO$_2$e (90th percentile range of 59-108tCO$_2$e). Homes with electrified heating see more cost and emission reduction from V2H than those without, suggesting a strong synergy between heating and vehicle electrification.
+	\end{abstract}
+
+	\begin{keyword}
+		Electric vehicles, vehicle-to-home, renewable energy, decarbonization, battery degradation
+	\end{keyword}
+
+
+\end{frontmatter}
+
+\newpage
+
+\linenumbers
+
+
+\section{Introduction}
+The adoption of electric vehicles (EVs) and large-scale deployment of variable renewable energy (VRE) are central to the climate action plans of many major economies. Global EV sales in 2023 exceeded 14 million, accounting for 15.8\% of all new car sales, up from 18\% in 2023 and 14\% in 2022 \cite{
+alsauskas_global_2024}. As EVs have lower life-cycle emissions than gasoline vehicles, this benefit is expected to increase as the power system decarbonizes \cite{he_economic_2019}. Paralleling the increase in electric vehicle (EV) adoption, wind, and solar electricity generation has expanded rapidly. In the United States, wind and solar power generators supplied 14.7\% of the nation's electricity in 2023, up from 2.3\% in 2010. This upward trajectory is expected to accelerate \cite{noauthor_annual_2023,gagnon_2023_2023}.
+
+Here we explore the possibility that households can use EV batteries to reduce their utility bills and greenhouse gas (GHG) emissions. In particular, we focus on home-EV integration (V2H). This approach sidesteps some challenges that vehicle-to-grid approaches face (e.g., permitting, the grid's capacity to integrate distributed resources) \cite{sovacool_beyond_2009,sovacool_future_2017}. It also ensures that the benefits of using the vehicle battery to shift electricity use flows directly to the vehicle owner, rather than indirectly through lower electricity systems costs \cite{peterson_economics_2010}.
+
+\textbf{Original:}
+We first develop representative driving profiles, which represent the state of the EV for each hour of a representative year. The state includes whether it is being driven, and if stationary, its location type (e.g., home, office, etc.). When the car is being driven, the profile includes the length of the trip. We develop representative driving profiles for 432 regions derived from a combination of 103 grid balancing areas and--within each balancing area--regions with different climates. From these representative driving profiles, we estimate vehicle energy use in a way that accounts for whether the driving is urban or rural, and for the ambient temperature. The need to meet the transportation requirements represented by these driving profiles, and the energy needed for those requirements, is treated as a binding constraint in our subsequent modeling. 
+\textbf{Edit(JC):} 
+We develop driving profiles and energy consumption models for 432 regions across the U.S., accounting for local climates, driving patterns, and grid characteristics.
+
+We model three scenarios to determine how each vehicle charges. First, a baseline in which households charge their EV batteries to 80\% whenever the state of charge reaches 20\%, provided the EV is home or at work for at least 8 hours. Second, a scenario in which EV charging is optimized to reduce an objective function that combines charging costs and monetized GHG emissions. Third, a vehicle-to-home scenario, in which the battery can charge from the grid and discharge to the home (but not to the grid) in a way that minimizes the utility cost and GHG emissions from the household's \textit{total} electricity consumption, including the energy used for the EV and the home's other needs. In the latter two scenarios, the home's electricity purchases from the grid are shifted from high-cost, high-emitting hours to low-cost and low-emitting hours, thus reducing lifetime costs and GHG emissions. EVs are assumed to use direct current fast charging (DCFC) as a last resort to replenish energy demand during long trips.
+
+Past studies of EV-system integration are city- or state-level case studies. Few discuss the lifetime emission and cost savings in a way that accounts for grid decarbonization (seen in Table \ref{table: litrev}). Jenn (2023) \cite{jenn_emissions_2023} modeled the electrification of California's light-duty vehicle fleet and the decarbonization of its power generator fleet through 2050. The study separated emission reduction benefits of electricity grid decarbonization, utility-controlled charging, and vehicle electrification. It found synergies between fleet electrification and power system decarbonization. The study aggregated EV charging into a single load profile and was limited to California, US. Chen \textit{et al.} (2022) \cite{chen_emission_2022} assessed emission and cost reduction of utility-controlled charging in Beijing, China. The study's EV behavioral modeling was also informed by detailed real-world traveling records. However, the study only considered one near-future power system scenario and examined a single year of fleet operation. The study accounted neither for grid decarbonization nor regional differences. Tu et al.2020 simulated individual EV charging profiles based on travel records collected in Ontario, Canada, and assessed the GHG emission reduction benefits of utility-controlled charging \cite{tu_electric_2020}. This study was also regional and relied on specific local datasets. The study did not account for future grid decarbonization.
+
+\begin{table}[!ht]
+\caption{Literature review}
+\label{table: litrev}
+\begin{tabular}{lccccccc}
+\toprule
+Study & \begin{tabular}[c]{@{}l@{}}Beyond\\city or state\\case study\end{tabular} & \begin{tabular}[c]{@{}l@{}}Individual\\vehicle\\behavior\end{tabular}& \begin{tabular}[c]{@{}l@{}}Controlled\\charging\end{tabular} & V2H &\begin{tabular}[c]{@{}l@{}}Vehicle\\lifetime\\analysis \end{tabular} & \begin{tabular}[c]{@{}l@{}}Grid\\decarbonization\\in lifetime\end{tabular} \\ \midrule
+
+\begin{tabular}[c]{@{}l@{}}Jenn\\2023 \cite{jenn_emissions_2023} \end{tabular}   &       &      & \checkmark     & & \checkmark     & \checkmark     \\
+\begin{tabular}[c]{@{}l@{}}Owens\\2022 \cite{owens_can_2022} \end{tabular} &       &       & \checkmark & \checkmark &            & \\
+\begin{tabular}[l]{@{}l@{}}Chen et al.\\2022 \cite{chen_emission_2022} \end{tabular}  &       & \checkmark     &  \checkmark  &    &      & \checkmark     \\
+
+\begin{tabular}[c]{@{}l@{}}Holland et al.\\2020 \cite{holland_why_2022}\end{tabular}  &   \checkmark           &      &      &  &     & \checkmark     \\
+
+\begin{tabular}[c]{@{}l@{}}Tang et al.\\2021 \cite{tang_reducing_2021} \end{tabular}   &       &       & \checkmark     &  &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}Hung et al.\\2021 \cite{hung_regionalized_2021} \end{tabular}  &       &       &       &  &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}Crozier et al.\\2020 \cite{crozier_opportunity_2020} \end{tabular} &  &       &     \checkmark  &      &  &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}Zhang et al.\\2020 \cite{zhang_daily_2020} \end{tabular} &       & \checkmark     & \checkmark     &   &     & \checkmark     \\
+
+\begin{tabular}[c]{@{}l@{}}Huber et al.\\2020\cite{huber_probabilistic_2020}\end{tabular}  &       & \checkmark     & \checkmark     &    &              &       \\
+
+\begin{tabular}[c]{@{}l@{}}Jenn\\2020 \cite{jenn_emissions_2020} \end{tabular}  &       & \checkmark     &       &   &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}Brinkel et al.\\2020 \cite{brinkel_should_2020} \end{tabular}  &       &       & \checkmark     &   &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}Tu et al.\\2020 \cite{tu_electric_2020} \end{tabular}  &       & \checkmark     & \checkmark     &   &     &       \\
+
+\begin{tabular}[c]{@{}l@{}}He et al.\\2019 \cite{he_economic_2019} \end{tabular}   &       &       &       &     &             & \checkmark     \\
+
+\begin{tabular}[c]{@{}l@{}}Qiao\\2019 \cite{qiao_life_2019} \end{tabular}  &       &       &       &     &             &       \\
+
+\begin{tabular}[c]{@{}l@{}}Chen\\2018 \cite{chen_impacts_2018} \end{tabular} &       &       & \checkmark     &     &             & \checkmark     \\
+
+\begin{tabular}[c]{@{}l@{}}Plötz\\2017 \cite{plotz_co2_2017} \end{tabular} &       &       &       &      &            &       \\
+
+This study &   \checkmark     & \checkmark     & \checkmark     & \checkmark & \checkmark     & \checkmark       \\
+
+\bottomrule     
+
+\end{tabular}
+
+\end{table}
+
+We improve upon these studies in three ways. First, we cover the contiguous US, while reporting results at the county level. This makes it possible to assess how the climate, driving patterns, and the electricity grid mix affect the value of different charging interventions to the household and determine those interventions' efficacy in cutting GHG emissions. Second, we couple the vehicle with the hourly electric loads of representative homes in each location. This allows us to test the value of V2H to the household and V2H's efficacy in cutting bills and emissions. Third, our modeling shows that V2H increases EV battery cycling. Therefore, we evaluate the impact of charging interventions to assess whether degradation might pose a significant barrier to V2H adoption. 
+
+\section{Methods}
+
+\subsection{Standardization of dataset resolution}\label{sec:harmony}
+
+The datasets used in this study vary in their spatial resolutions (shown in Figure \ref{fig:method}). We define a reference geographical unit (in short RGU) to align all datasets, as described below.
+
+The Cambium dataset provides hourly locational marginal prices of electricity and marginal emissions factors at the level of a balancing area (BA), a notional region within which hourly electricity supply and demand are balanced. Since BAs vary greatly in size, with some covering as few as one county and others encompassing up to 130 counties, we divided each BA into 3-5 sub-regions based on local climate. 
+%The BAs vary greatly in size, and may contain regions with different climates. On average a balancing area contains 10 counties. The largest balancing area contains 130 counties, whereas the smallest balancing area contains only 1 county. We therefore divide each balancing area into 3-5 sub-regions. 
+We obtain these sub-regions by performing k-means clustering on an hourly time series of county centroid temperatures for each county in the balancing area \cite{noauthor_weather_2024}. The number of clusters within each balancing area was identified by visual inspection of a scree plot to identify the knee. These sub-regions are treated as the RGUs for this study, of which we have 432.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\columnwidth]{Figures/Method.png}
+    \caption{Overview of methods and dataset descriptions.}
+    \label{fig:method}
+\end{figure}
+
+The spatial resolution of the vehicle driving demand dataset NHTS 2017 is on the county level. However, at the county level, the number of available daily driving records is too low for reliable longitudinal driving profile simulation. At the Census Division level, each Census Division includes several U.S. states and has at least tens of thousands of daily driving records, which is essential for the stochastic sampling approach we use to build our driving profiles. Hence, for each RGU, we identified driving records that corresponded to the Census Division for that RGU. 
+
+For household energy consumption, we use the ResStock database, which provides detailed hourly energy use for 900,000 homes across over 1,000 U.S. locations. Each RGU is matched with a representative home selected from local ResStock data points (detailed methods are described in Section \ref{sec:chargingsim}). 
+%For household energy consumption, we identify all the homes within the ResStock database that are in the county or counties contained within each RGU \cite{wilson_end-use_2022}.
+
+\subsection{EV driving behavior and energy consumption modeling}\label{sec:behavior and energy}
+We synthesize longitudinal travel records for individual EVs with daily travel records of household vehicles in the National Household Travel Survey (NHTS) 2017 dataset. The NHTS dataset contains the record of one day of travel activity for the surveyed household's vehicles. Each record includes the county of the household, vehicle type, vehicle make, and vehicle age. For each hour of one day, the record tells us the category of the vehicle's location if stationary, and--if it is performing a trip--the origin, destination, and length of trip. We then identify all records within the same Census Division, where the vehicle is a sedan or SUV, and in which the first trip of the day has the same origin category (e.g., home or work) as the destination category of the previous record. We then randomly select one from this subset of records and concatenate it with the first record to form a 2-day chain. We repeat this process 364 times to obtain a coherent 365-day chain. For each RGU, we produce 15 such chains. As such, the analysis that follows is based on 15x432 = 6,480 representative 1-year activity chains. 
+
+To accurately estimate the EV energy consumption, we begin by obtaining the hourly temperature in the RGU. For each county within an RGU, we query the Meteostat dataset with the latitude and longitude of its centroid to obtain hourly temperatures for a normal year \cite{noauthor_weather_2024}. For each hour, we average the temperatures of the constituent counties, to obtain an hourly temperature profile for an RGU. We assume the driving patterns are homogeneous for sedan and SUV drivers that are in the same census division (each of which contains a few states). A year-long driving profile is simulated for each EV. Next, we estimate the EV energy consumption of each trip in each year-long trip profile. The generic EV we choose for modeling is the 2023 Tesla Model Y Long Range AWD, with the baseline EPA-rated efficiency \cite{noauthor_2023_2024-1}. This vehicle has an 82kWh Nickel Manganese Cobalt (NMC) battery, a range of 330 mi, and city/highway fuel economies of 127 MPGe/117 MPGe.  We assume the driving cycle is 55\% urban and 45\% highway \cite{wu_regional_2019}. For each trip, we adjust the fuel economy based on the temperature using a method described in Wu \textit{et al.} (2019), and based on the hourly temperatures calculated above \cite{wu_regional_2019}.
+
+\subsection{EV charging simulation}\label{sec:chargingsim}
+We assume EV owners have access to Level-2 (L2) charging (10kW) at work and at home. We assume owners can use L2 charging when the vehicle is either at home or at work and is stationary for more than 8 hours. Such parking events are defined as L2 charging opportunities. The monetary cost of L2 charging is assumed to be the sum of electricity costs and carbon price charges. The hourly price of electricity is assumed to be the sum of the hourly locational marginal price (LMP) for the balancing area in which the owner lives and a fixed adder of \$0.075/kWh (reflection of retail price versus end-use cost)\cite{gagnon_cambium_2021}. 
+
+The balancing area LMP for each year is obtained from NREL's Cambium database \cite{gagnon_cambium_2021}. In our study, we use results of the 'Cambium 2021, Mid-case, current policy' scenario, which models the optimal generation mix every two years, and then simulates the operation of that generation mix. Simulations run from the present to 2050, and assume no new policies are implemented. Our choice of the 2021 dataset is deliberately conservative, as it ignores the provisions of the 2022 Inflation Reduction Act. The externalities from GHG emissions are the product of the energy drawn from the grid, the short-run marginal emissions rate (SR-MER) of electricity in the relevant balancing area, and a carbon price of \$51/tCO$_2$e \cite{noauthor_technical_2021}. The SR-MERs are obtained from NREL's Cambium. Note that while SR-MERs do not assume structural changes to the grid \textit{because} of the new load that EVs represent, they do account for the evolution of the grid \textit{independent} of the new load (e.g., due to retirements and the changing relative costs of different technologies).
+
+We model three charging strategies. First, in \textbf{uncontrolled} charging, owners charge the battery to 80\% at the first L2 charging opportunity if their battery state of charge is 20\% or lower. This approach guarantees that, except on long trips, charging needs are always met with L2 charging. On long trips where L2 charging cannot cover energy consumption needs, we assume that drivers have access to direct-current (DC) fast charging (150kW). 
+
+Second, in \textbf{controlled} charging, charging occurs so that the sum of the monetary cost of charging, and monetized GHG emissions, is minimized. The modeling assumes 10 days' foresight of electricity prices and driving energy needs, and is constrained to ensure that driving needs are always met. As before, we assume that the EV relies primarily on L2 charging, and the demand that cannot be met by L2 charging is met through DC fast charging during trips between long parking events. However, we price DC fast charging to ensure that it does not occur if driving demand can be met by L2 charging. 
+
+Third, in \textbf{Vehicle-to-Home (V2H)} we assume that vehicles can charge from the grid, but also discharge to the house to meet the house's electricity needs. We assume that this can occur only during L2 charging opportunities at home. Discharge power is limited to 10kW.  As in the case of controlled charging, charging and discharging are controlled to minimize the sum of the household's utility bills and monetized GHG emissions. The difference is that the vehicle's battery can now be used to shift household energy use. Home electricity consumption profiles are extracted from the residential building energy consumption dataset, ResStock, which includes the simulated hourly end-use profiles for 900,000 archetypal homes in >1000 U.S. locations. Due to computational limitations, we run our analysis for one representative home in each location. We run separate analyses for homes with electrified heating with heat pumps and homes without heat pumps, assuming Annual Meteorological Year (AMY) 2018 weather \cite{wilson_end-use_2022}. We assume that this pattern of energy consumption repeats for each of the 15 years of the vehicle's life. We select a single-family home, built before 2000, <2,500 square feet, with other characteristics representative of the current housing stock. As before, the optimization is constrained so that driving demand is primarily met by L2 charging, with DC fast charging as replenishment. Once again 10 days' foresight of driving demand and electricity prices is assumed. 
+
+
+Detailed problem formulation for the charging simulation is described in the SI. 
+
+\subsection{Lifetime costs and emission assessment}
+
+The electricity prices and GHG emission factors used in EV charging simulations are also used to assess the lifetime charging costs and GHG emissions (see Section \ref{sec:chargingsim} for details).
+
+We estimate annual and lifetime charging costs and life-cycle GHG emissions. We assume an EV life of 15 years. To keep the analysis computationally tractable, we estimate EV charging costs and emissions for 2024, 2030, and 2040 for EVs purchased in 2024. We assume that the emissions and costs of each of the first 5 years are identical to those observed in 2024; those from years 6-10 are identical to those in 2030; and those for years 11-15 are identical to those in 2040. The lifetime costs and emissions are assumed to be the sum of the fifteen annual costs and emissions obtained in this way. We repeat the optimization and cost emission analysis for 15 profiles in 432 RGUs for 3 representative years (2024, 2030, and 2040). We use the estimation of vehicle-cycle GHG emissions of ICEVs, HEVs, and EVs  given by the Greenhouse Gases, Regulated Emissions, and Energy Use in Transportation (GREET) model \cite{wang_greenhouse_2023}.
+
+\subsection{EV battery lifetime assessment}
+
+%The results of the analysis above show that the number of cycles the EV battery undergoes is 3-4 times greater in the V2H scenario than in scenarios where the EV is used only for travel. 
+V2H can substantially increase EV battery cycling.  To assess whether this poses a barrier to V2H adoption, we perform battery degradation analysis with models fitted to accelerated degradation experiments of 4 mass-manufactured Li-ion EV batteries, including Nickel Manganese Cobalt (NMC) and Lithium Iron Phosphate (LFP) chemistries. The battery degradation assessment model details are described in SI Section \ref{sec:SIbatdeg}. 
+
+\subsection{Gasoline vehicle baseline}
+
+We also compare the GHG emissions of EVs with those of generic internal combustion engine vehicles (ICEV) and hybrid electric vehicles (HEV) of similar sizes (mid-sized SUVs), meeting the same travel needs. We chose these vehicles for our analysis because they are the largest-selling category of vehicles in the U.S. We assume the baseline ICEV model has a fuel economy of 26MPG in the city and 34MPG on the highway, and the fuel economy for the HEV is 43MPG in the city and 36MPG on the highway. The fuel efficiency of these vehicles is adjusted based on hourly ambient temperatures to reflect real-world fuel consumption. The drive cycle mix is assumed to be 55\% city and 45\% highway \cite{wu_regional_2019}. GHG emissions of ICEVs and HEVs on gasoline are estimated using the GREET model \cite{wang_greenhouse_2023}.
+
+\section{Results}
+We find that controlled charging considerably reduces lifetime costs and GHG emissions compared with uncontrolled charging. On average, controlled charging yields a lifetime cost reduction of \$2.7k (90\% percentile range: \$2.2k--\$3.3k). and a lifetime GHG emission reduction of 21tCO$_2$e (90\% percentile range: 18tCO$_2$e--26tCO$_2$e). For homes with heat pumps, the average lifetime V2H cost reductions are even more substantial, at \$8.4k (90th percentile range: \$6.3k--\$10k). The average lifetime emission reduction is 85tCO$_2$e (90th percentile range: 59tCO$_2$e--110tCO$_2$e). In contrast,  homes without heat pump space heating see an average lifetime V2H cost reduction of \$6.7k (90th percentile range: \$4.3k--\$9.5k) and an average lifetime emission reductions of 61tCO$_2$e (90th percentile range: 38tCO$_2$e--80tCO$_2$e). We find that while home heating electrification with heat pumps amplifies the benefits of V2H in most parts of the country, it does not do so everywhere (e.g., in Southern states). Our battery degradation modeling suggests that V2H does not substantially compromise battery lifespan, across batteries and degradation models. %In all cases, battery life--defined as the age at which the battery's maximum state of health is <70\% of its original value-- comfortably exceeds current warranties.
+
+
+\subsection{EV charging costs}
+
+Figure \ref{fig:lifetimecosts} shows the lifetime charging costs of individual EVs. With uncontrolled charging, adding an EV charging to household electricity consumption increases lifetime electricity bills by \$7,600 on average (5th percentile increase of \$6500 in South Dakota; 95th percentile increase of \$8900 in Louisiana). In contrast, with controlled charging, bills increase by only \$4900 on average (5th percentile increase of \$4000 in California; 95th percentile increase of \$5700 in Arizona). Notably, with V2H, EV charging \textbf{reduces} lifetime bills by \$810 on average (5th percentile increase of -\$3100 in Mississippi; 95th percentile increase of \$1400 in Virginia). 
+
+Controlled charging produces this sharp declconsiderable savingt by enabling EV owneingrs to take advantage of lower electricity prices with grid decarbonization \cite{mills_impacts_2020}. Grid decarbonization sharply increases the number of hours when electricity sources with very low marginal costs (e.g., wind and solar) are at the margin. Controlled charging strategies allow owners to shift EV charging demand to hours in which electricity prices are low. V2H integration allows owners to shift other household energy use, producing an even larger gain. 
+
+Controlled charging and V2H can both reduce lifetime charging costs across the contiguous US. The national average cost reduction by controlled charging is \$2700 (5th percentile reduction of \$2200 in North Dakota; 95th percentile reduction of \$3200 in Indiana). For homes with heat pumps, allowing V2H integration slashes the lifetime charging costs by an average of \$8400 (5th percentile reduction of \$6300 in Florida; 95th percentile reduction of \$10000 in Mississippi).  In contrast,  homes without heat pump space heating see an average lifetime V2H cost reduction of \$6.7k (90th percentile range: \$4.3k--\$9.5k)
+
+
+\begin{figure*}[!ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/YearCost.png}
+    \caption{Median lifetime charging costs of EV owners with uncontrolled charging, controlled charging, V2H in homes with electrified space heating (heat pumps), and V2H in homes without electrified heating (heat pumps). Charging costs are defined as the cost changes with the addition of an EV to the household's total electricity bills. }
+    \label{fig:lifetimecosts}
+\end{figure*}
+
+
+
+\begin{figure*}[!ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/CostChange.png}
+    \caption{Median differences in lifetime charging costs, of EVs under different charging scenarios of each region across the US. Charging costs are defined as a net increase in electricity bills for the whole home after EV charging is introduced. V2H (no heat pump): V2H for homes without electrified space heating using heat pumps.}
+    \label{fig:costchange}
+\end{figure*}
+
+%The national average lifetime cost reduction achieved by shifting to V2H from uncontrolled charging is \$8400. The 5th percentile of cost reduction is \$6300, in Florida. The 95th percentile cost reduction is \$10000, in Missouri (see Figure \ref{fig:costchange} for distribution of cost change across the contiguous US). 
+To understand what drives regional differences in cost reduction benefits of V2H, we use a random forest model to assess feature importance (see Figure \ref{fig:24pdp} for 2024 results, and SI Figure \ref{fig:40pdp} for 2024 results). In both 2024 and 2040, higher home electricity consumption is correlated with higher V2H savings. Higher home electricity consumption gives V2H more energy arbitrage opportunities, as V2H can shift not only EV charging load but also the home electric load, thus leading to higher cost reduction. In 2024, higher electricity price fluctuations are also correlated with higher V2H savings, but this volatility becomes less important in 2040. In 2024, the carbon intensity of the grid varies significantly across regions, and regional differences in electricity price fluctuations are also larger. By 2040, decarbonization will be widespread and all regions have a large number of hours with low marginal electricity prices to which loads can be shifted to reduce cost. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/partialdependence_V2HUC_24.png}
+    \caption{Partial dependence plot of cost reduction benefits of V2H compared with uncontrolled charging on selected independent variables from 2024 results and inputs. A random forest algorithm is used to fit the model. Data points involved in this analysis are county medians. The Y-axis denotes the predicted outcome of the fitted model, in annual charging cost changes. The smaller the outcome, the higher the savings. The 3rd to 8th features are annual generation mix (\%) of respective fuel type``. 'NG generation' stands for natural gas generation. }
+    \label{fig:24pdp}
+\end{figure}
+
+
+
+\subsection{EV charging emissions}
+
+%Compared with ICEV, EVs with uncontrolled charging reduce lifetime GHG emissions of the use stage everywhere in the contiguous US. Average lifetime emissions of EVs are 21tCO$_2$e lower than similar-sized ICEVs (5th percentile reduction of 13tCO$_2$e in Ohio; 95th percentile reduction of 31tCO$_2$e in Texas). The average relative emission reduction is 51\% (5th percentile of 26\% in Ohio to the 95th percentile of 58\% in Texas. Compared with more fuel-efficient HEVs, EVs on average reduce lifetime emissions by 7.4tCO$_2$e. In the upper midwest, EVs have higher lifetime emissions than HEVs (0-0.83tCO$_2$e difference). In the rest of the US, EVs have lower emissions (0-16tCO$_2$e difference).The estimated vehicle-cycle emissions of a medium-sized SUV are 8.03tCO$_2$e for ICEVs, 8.42tCO$_2$e for HEVs, and 12.9tCO$_2$e for EVs.
+With uncontrolled charging, EVs have lower lifetime \textbf{life-cycle} emissions than ICEVs everywhere in the US (90th percentile range of emission reduction: 8.1-26tCO$_2$e). HEVs have lower life-cycle emissions than EVs in the Reliability First regional grid (0-5.3tCO$_2$e difference), whereas EVs have lower life-cycle emissions in the rest of the country (0-12tCO$_2$e difference). Nevertheless, EVs with controlled charging have lower emissions than both ICEVs and HEVs everywhere in the US (see Figure \ref{fig:emissionchange_gas}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/EmissionChange_2_gas.png}
+    \caption{Median differences in \textbf{life-cycle} emissions of each region across the US, between HEVs, ICEVs, EVs with uncontrolled charging, and EVs with controlled charging. EVs with controlled charging have lower life-cycle GHG emissions than ICEVs (90th percentage difference of 31-47tCO$_2$e) and HEVs (90th percentage difference of 18-33tCO$_2$e). We use the GREET model to account for GHG emissions in the full vehicle life cycle, including upstream processes, operation, and end-of-life disposal.}
+    \label{fig:emissionchange_gas}
+\end{figure}
+
+
+As Figure \ref{fig:emissionchange} shows, controlled charging and V2H both reduce charging emissions significantly compared with uncontrolled charging across the US. EV lifetime GHG charging emissions are defined as the change of the sum of EV charging emissions and household baseload emissions. With uncontrolled charging, the average EV charging emission is 29tCO$_2$e (5th percentile increase of 22tCO$_2$e in California; 95th percentile increase of 38tCO$_2$e in Ohio). With controlled charging, the average EV charging emission is 7.7tCO$_2$e (5th percentile increase of 1.8tCO$_2$e in Kansas; 95th percentile increase of 14tCO$_2$e in New York). Most notably, with V2H integration, EV charging produces a \textbf{negative emission} of -56tCO$_2$e on average (5th percentile of -29tCO$_2$e in New York; 95th percentile of -81tCO$_2$e in Missouri). 
+
+The analysis indicates that grid decarbonization will significantly reduce annual charging emissions for uncontrolled charging from 2024 to 2040, even though uncontrolled charging does not respond to monetized emission factor signals. However, controlled does respond to monetized emission factor signals and low price signals of wind and solar generation, allowing for higher cost reductions. Furthermore, the decrease in V2H emissions is even more significant. Detailed annual results are shown in SI Figure \ref{fig:annualemissions}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/EmissionChange_2.png}
+    \caption{Median differences in \textbf{life-cycle} emissions of EVs under different charging scenarios of each region across the US. Charging emissions are defined as the net increase in total GHG emissions of the whole home with EV charging. Results for EVs with charging modes of uncontrolled charging, controlled charging, V2H, and V2H for homes without electrified space heating are displayed.}
+    \label{fig:emissionchange}
+\end{figure}
+
+\subsection{EV battery life}
+
+The different charging strategies, including V2H, have a small effect on the battery state of health (SOH). The SOH is the ratio of the battery energy capacity to the energy capacity when fresh out of the factory. Our analysis shows that V2H results in higher reduction in battery SOH than controlled charging (see Figure \ref{fig:caploss82perc}). This reduction is nonetheless modest at the end of the EV's 15-year life. In the worst case (in our modeling, for the 'LFP' cell), it is—averaged across the US—3.4 percentage points, with a 90th percentile range of 1.3 to 5.5 percentage points. While our modeling suggests that in no case does the state of health fall below 80\%, we make no claims about the absolute durability of the batteries, which depends on factors that we do not model here including aggressive driving or extensive use of DC fast charging (see Figure \ref{fig:caploss82}). The detailed battery degradation results are in SI Section~\ref{sec:batdegsi}. Our conclusion that V2H does not substantially reduce battery life is, nevertheless, robust across different battery chemistries, degradation model structures, climates, travel behaviors, household energy use profiles, and charging patterns. 
+%The simulated capacity degradation of all four battery types in this study is well below 30\% at the end of the simulated 15-year lifetime. Figure \ref{fig:caploss82} shows that, at the end of 20 years, the 85th-percentile capacity loss does not exceed 15\% anywhere in the United States for any of the batteries we simulate everywhere in the contiguous US. Our modeling suggests that no additional costs or GHG emissions would occur as a result of early battery retirement induced by V2H.   This conclusion is robust to different assumptions about EV battery size: they also hold for 60kWh batteries, which undergo more cycles. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/caplossperc_82.png}
+    \caption{Median change in battery state of health caused by different charging strategies at the end of the EV's assumed 15-year lifetime, expressed in percentage points of remaining capacity. For example, a 10 percentage point reduction implies that the batteries' state of health falls from 90\% to 80\%. Our analysis suggests that in all cases the end-of-life state of health exceeds 70\%.}
+    \label{fig:caploss82perc}
+\end{figure}
+
+
+
+
+\section{Conclusion and discussion}
+
+
+There has been considerable debate about whether EVs reduce greenhouse gas emissions. Studies that use historical short-run marginal emission rates often find that, at least in some parts of the US, electrification will raise greenhouse gas emissions \cite{singh_ensuring_2024,holland_why_2022}. There is also a debate about whether it is appropriate to use short-run marginal emission rates that do not take into account structural changes to the grid that are \textit{induced} by widespread EV adoption\cite{holland_why_2022,gagnon_short-run_2022,vaishnav_how_2023}. When an attempt is made to quantify the effect of structural changes, the resultant marginal emissions factors are often much lower and their use would show that EV adoption cuts emissions everywhere in the U.S. \cite{gagnon_planning_2022}. However, such attempts are often criticized for relying on a large number of subjective modeling choices and for being deeply uncertain \cite{holland_why_2022,gagnon_short-run_2022}. Here, we show that even when short-run marginal emission rates are used, EV adoption reduces greenhouse gas emissions, due to EVs' higher energy efficiency compared to ICEVs and  the anticipated grid decarbonization \textit{independent of EV adoption}.  (see Figure \ref{fig:emissionchange}). 
+
+%One limitation of the study is that the results and conclusion hold true on the premise that the EV fleet only has a marginal impact on the power system operation. It treats the behaviors of individual households and individual EVs as marginal to the power system structure and operation. The assumption may not hold true anymore when EV penetration is high enough to significantly change the power system operation and even structure.
+
+One limitation of this study is that it assumes that daily charging decisions are made based on perfect foresight of electricity prices, electricity emissions, and driving behaviors within a 10-day window. This may under- or overstate the benefits of controlled charging: clearly, it is implausible that perfect foresight exists for this period, but acting based on imperfect but longer-run forecasts might produce larger gains than we estimate here. A second limitation is that we also do not account for the benefits that V2H offers in terms of increased resilience in the face of power outages \cite{ahmad_increase_2021,perera_quantifying_2020,v_spatiotemporal_2023}. These are likely to become more frequent as the climate changes and more consequential as more household end-uses electrify \cite{noauthor_surging_2022}. A third limitation is that our analysis relies on the assumption that consumers are fully exposed to marginal electricity prices. The real-world implication of our result is that there is an economic case for intermediaries who expose themselves to real-time electricity prices, and use consumers' car batteries to engage in an arbitrage. Passing some or all of the benefits of that arbitrage to consumers could lower the cost of EV ownership. 
+
+Despite these limitations, our key findings hold consistently across a variety of driving profiles, climates, and power system characteristics. Across the country, V2H helps eliminate grid emissions associated with vehicle charging, and also makes a dent in emissions associated with other household electricity use. V2H slashes the cost of charging in homes where home space heating is \textit{not} provided by electric heat pumps. Except in the Southern US, homes with electrified heating see greater emission reductions than those without electrified heating. This suggests that there are strong synergies between heating and vehicle electrification with V2H. This finding highlights the need for modelers to recognize that electrification is likely to increase the interconnectedness of infrastructures that are currently treated as separate; in this case, buildings, light passenger transportation, and the power system \cite{vaishnav_implications_2023}. This observation may also have implications for how automakers--many of whom have committed to reducing their Scope 1, 2, and 3 greenhouse gas emissions--account for their own carbon footprint both internally and in response to regulatory requirements. 
+
+While V2H can more than triple battery cycling, EV battery lives under V2H are not necessarily shorter. Past work, which analyzed older battery chemistries, suggested that battery degradation is an important barrier to integrating EV batteries with the electricity grid. Our results suggest that battery degradation is not a barrier to V2H. 
+
+\section*{Acknowledgements}
+
+
+
+\section*{Declaration of Interests}
+<TBA>
+
+\section*{Author Contributions}
+<TBA> 
+\makeatletter
+\renewcommand \thesection{S\@arabic\c@section}
+\renewcommand\thetable{S\@arabic\c@table}
+\renewcommand \thefigure{S\@arabic\c@figure}
+\makeatother
+
+\renewcommand{\citenumfont}[1]{S#1}
+
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section}{0}
+
+\section{Supplementary results}
+
+\subsection{Annual results on costs and emissions}
+From 2024 to 2040, controlled charging and V2H for homes with electrified heating introduce significant cost reduction compared with uncontrolled charging everywhere in the contiguous US. In 2024, costal WECC states and central states see the highest annual cost reduction. In 2030 and 2040, substantially more wind and solar power generators will be installed across the country. The decarbonization of the grid not only reduces hourly marginal GHG emission factors and hourly total electricity prices, but it also increases the variation and fluctuation of hourly emission factors and hourly electricity prices due to the variability of the newly added renewable generators. Uncontrolled charging does not respond to price signals, and most of the charging takes place during hours of high baseload and low solar and wind generation. In contrast, both controlled charging and V2H can reduce the costs of grid decarbonization by shifting load to time with lower electricity prices and lower marginal emission rates. As a result, annual cost reduction is not significant for uncontrolled charging, while controlled charging and V2H see lower annual costs  across the contiguous US through 2040 (Seen in Figure \ref{fig:annualcost}).  In all modeled years, V2H outperforms controlled charging everywhere in the contiguous US. 
+
+\newpage
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/partialdependence_V2HUC_40.png}
+    \caption{Partial dependence plot of cost reduction benefits of V2H compared with uncontrolled charging on selected independent variables from 2040 results and inputs. Random forest algorithm is used to fit the model. Data points involved in this analysis are county medians. The Y-axis denotes the predicted outcome of the fitted model. The smaller the outcome, the higher the savings.}
+    \label{fig:40pdp}
+\end{figure*}
+\newpage
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/YearCost_1.png}
+    \caption{Median annual charging costs for individual EVs, of each region across the US. Charging costs are defined as net increase in the electricity bill of the whole home after introducing EV charging. 2024, 2030 and 2040 are modeled annual results. The homes modeled have electrified space heating}
+    \label{fig:annualcost}
+\end{figure*}
+\newpage
+
+Unidirectional controlled charging and bidirectional V2H can both lead to charging emission reduction across modeled years and in lifetime results (see Figure \ref{fig:annualemissions}). Though GHG emissions are monetized and not the objective of optimization, emissions are reduced everywhere in the contiguous US.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/YearEmission_1.png}
+    \caption{Median annual charging GHG emissions for individual EVs, of each region across the US. Charging GHG emissions are defined as net increase in GHG emissions of the whole home after introducing EV charging. 2024, 2030 and 2040 are modeled annual results. The homes modeled have electrified space heating}
+    \label{fig:annualemissions}
+\end{figure*}
+
+\subsection{Expanded results of EV battery degradation}\label{sec:batdegsi}
+
+\begin{figure*} 
+    \centering 
+    \includegraphics[width=0.90\columnwidth]{Figures/caploss 82_15yr.png} 
+    \caption{Median capacity loss at the end of 15-year EV lifetime of counties across the US, across EV charging behavior cases and across battery models. The battery size of the EV is assumed to be 82kWh.} 
+    \label{fig:caploss82} 
+\end{figure*}
+
+\subsection{Results of EVs with smaller batteries}
+
+We assessed the lifetime charging costs, GHG emissions, and battery health loss in the lifetime of a hypothetical EV with a 60 kWh battery capacity. All other factors are kept the same. 
+
+\subsubsection{Charging costs}
+
+Adding EV charging to baseline electricity consumption increases lifetime electricity bills by an average of \$8600 (5th percentile increase of \$7400 in South Nevada; 95th percentile increase of \$9800 in Kentucky) with uncontrolled charging. With controlled charging, bills increase by an average of \$5900 (5th percentile increase of \$4800 in Texas; 95th percentile increase of \$7000 in New York). With V2H integration, EV charging increases electricity bills by an average of \$770 over the 15-year lifetime of the EV (5th percentile increase of \$-1200 in Texas; 95th percentile increase of \$2900 in Michigan). Allowing V2H integration slashes the cost of EV charging by an average of 91\% (5th percentile reduction of 70\% in Ohio; 95th percentile reduction of 120\% in Florida) (see Figure \ref{fig:lifetimecosts60}). 
+
+Overall, costs are higher for EVs with 60-kWh batteries compared with EVs with 82-kWh batteries. As EVs with 60kWh batteries need to rely on fast charging (150kW) more to cover driving demands. However, EV-system integration, especially V2H, can still reduce charging costs significantly compared with uncontrolled charging, though the savings are less than EVs with 80kWh batteries. This is because fast charging is more expensive than slow charging at home or work. Moreover, fast charging cannot be rescheduled life slow charging and hence does not respond to price signals.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/YearCost_60.png}
+    \caption{Median lifetime charging costs of EV owners with uncontrolled charging, controlled charging, V2H in homes with electrified space heating, and V2H in homes without electrified heating. Charging costs are defined as the cost changes with the addition of an EV to the household's total electricity bills. The EV battery capacity is 60 kWh}
+    \label{fig:lifetimecosts60}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/CostChange_60.png}
+    \caption{Median changes in lifetime charging costs, when EV owners switch from uncontrolled charging or controlled charging to V2H, or from uncontrolled charging to controlled charging, of each region across the US. Charging costs are defined as the net increase in electricity bills of the whole home after introducing EV charging. The EV battery capacity is 60kWh.}
+    \label{fig:costchange60}
+\end{figure}
+
+\subsubsection{GHG emissions}
+
+Compared with ICEV, EVs with smaller batteries using uncontrolled charging have lower life-cycle GHG emissions of the operational stage everywhere in the contiguous US (see Figure \ref{fig:yearemission60} and Figure \ref{fig:emissionchange60}). The average use-stage emissions of EVs are 29$tCO_2e$, lower than similar-sized ICEVs (59$tCO_2e$). The average relative emission reduction is 50\% (5th percentile of 38\% in Indiana, 95th percentile of 65\% in Texas). The estimated vehicle-cycle emissions of a medium-sized SUV are 8.03tCO$_2$e for ICEVs, 8.42tCO$_2$e for HEVs, and 11.3tCO$_2$e for EVs with 60kWh batteries. Despite higher vehicle-cycle emissions, EVs have lower life-cycle emissions than ICEVs everywhere in the US (9.7-28tCO$_2$e, 90th percentile range of emission reduction). EVs have lower life-cycle emissions than HEVs in coastal WECC and southern states (0-14tCO$_2$e difference), whereas HEVs have lower life-cycle emissions in the rest of the country (0-3.7tCO$_2$e difference).
+
+Controlled charging and V2H both reduce charging emissions significantly across the US. Adding EV charging to baseline electricity consumption increases lifetime electricity emissions by an average of 29 $tCO_2e$ (5th percentile increase of 22 $tCO_2e$ in California; 95th percentile increase of 38 $tCO_2e$ in Ohio) with uncontrolled charging. With controlled charging, emissions increase by an average of 9.2$tCO_2e$ (5th percentile increase of 2.8$tCO_2e$ in Texas; 95th percentile increase of 16$tCO_2e$ in Ohio). With V2H integration, EV charging \textbf{reduces} electricity emissions by an average of 43 $tCO_2e$ over the 15-year lifetime of the EV (5th percentile reduction of 23 $tCO_2e$ in California; 95th percentile reduction of 62$tCO_2e$ in North Dakota). For uncontrolled charging, the annual charging emissions are reduced significantly with grid decarbonization from 2024 to 2040, even though uncontrolled charging does not respond to monetized emission factor signals. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/YearEmissions_2_60.png}
+    \caption{Median lifetime charging GHG emissions for individual EVs, of each region across the US. Charging GHG emissions are defined as the net increase in GHG emissions of the whole home after introducing EV charging. The EV battery capacity is 60kWh.}
+    \label{fig:yearemission60}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/EmissionChange_2_60.png}
+    \caption{Median changes in lifetime charging emissions, when EV owners switch from uncontrolled charging or controlled charging to V2H, from uncontrolled charging to controlled charging, or from an ICEV to an EV with uncontrolled charging, of each region across the US. Charging emissions are defined as the net increase in total GHG emissions of the whole home with EV charging. Results for EVs with charging modes of uncontrolled charging, controlled charging, V2H for homes with electrified heating, and ICEVs. The EV battery capacity is 60kWh.}
+    \label{fig:emissionchange60}
+\end{figure}
+
+
+
+\subsubsection{Battery life}
+
+
+Figure \ref{fig:caploss60perc} and Figure \ref{fig:caploss60} depict the degradation and degradation changes across battery cells and charging operations. 'NMC B1' sees a decrease in degradation with V2H. The average decrease in degradation is 3.6 percentage points of capacity loss (90\% percentile range: 2.6--4.9\% of capacity loss). 'NMC A' has the highest increase in degradation due to V2H. The average change in degradation is 3.6 percentage points of capacity loss (90\% percentile range: 1.9--5.4\% of capacity loss).
+
+%Battery capacity loss with 60-kWh battery capacity is more than with 82-kWh EVs, with all other factors remaining the same. V2H does not necessarily accelerate degradation (see Figure \ref{fig:caploss60}) However, despite the increase in capacity loss, all four battery models do not reach their end-of-life at the end of the simulated 15-year lifetime. Moreover, no simulated cases drop to 80\% even if the EV lifetime is 20 years (5 years more than we assume). Hence, even with a smaller battery (60 kWh), no additional costs or GHG emissions would occur as a result of early battery retirement induced by controlled charging or V2H.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Figures/caplossperc_60.png}
+    \caption{Median degradation increase (in percentage points of capacity loss) at the end of 15-year EV lifetime of counties across the US, across EV charging behavior cases and across battery models. The battery size of the EV is assumed to be 60kWh.}
+    \label{fig:caploss60perc}
+\end{figure}
+
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.90\columnwidth]{Figures/caploss 60_15yr.png} 
+    \caption{Median capacity loss at the end of 15-year EV lifetime of counties across the US, across EV charging behavior cases and across battery models. The battery size of the EV is assumed to be 60kWh.} 
+    \label{fig:caploss60} 
+\end{figure}
+
+\newpage
+
+\section{Supplementary information on methods}
+
+\subsection{Utility-controlled Charging Behavior Simulation}
+
+The linear programming optimization problem for controlled charging and vehicle-to-home operation is formulated as follows:\\
+
+\begin{align}
+\intertext{\smallskip\newline \textbf{Objective function:}  \smallskip\newline}
+\begin{split}\label{eq:1}
+    min{}& \sum_{t\in T}{SC_{t}*Charge_{t}/vEff-SC_{t}*Discharge_{t}*vEff+FC_{t}*FCharge_{t}/vEff}\\
+        & \forall t \in T, \\
+        & w.r.t.\text{ } Charge_{t},Discharge_{t},FCharge_{t}
+\end{split}\\
+\intertext{\smallskip\newline \textbf{Constraints:} \smallskip\newline} 
+\begin{split}\label{eq:SOC}
+    SOC_{t} = & SOC_{t-1} - Discharge_{t} + Charge_{t}+FCharge_{t}-Driving_{t},\\
+    &\forall 2 \leq t \leq 49
+\end{split}\\
+    SOC_{1} = & vIni \label{eq:ini}\\
+\begin{split}\label{eq:socrange}
+    0.2 * vCap \leq &SOC_{t} \leq 0.8* vCap
+\end{split}\\
+0 \leq & Charge_{t} \leq ChargeUp_{t},\label{eq:charg}\\
+&\forall t \in T\\
+0 \leq & Discharge_{t} \leq DischargeUp_{t},\label{eq:disc}\\
+&\forall t \in T
+\end{align}
+
+\nomenclature{\(T\)}{Set of hours}
+\nomenclature{\(SOC_{t}\)}{State of charge (SOC) of the EV in hour $t$, kWh}
+\nomenclature{\(vCap\)}{Battery capacity of the EV, kWh}
+\nomenclature{\(vIni\)}{Battery state of charge at the 1st hour of the optimization window, kWh}
+\nomenclature{\(SC_{t}\)}{L2 charging cost in hour $t$, USD/kWh}
+\nomenclature{\(FC_{t}\)}{Fast charging cost in hour $t$, USD/kWh}
+\nomenclature{\(Charge_{t}\)}{Energy charged with L2 charging in hour $t$, kWh}
+\nomenclature{\(FCharge_{t}\)}{Energy charged with fast charging in hour $t$, kWh}
+\nomenclature{\(Discharge_{t}\)}{Energy discharged in hour $t$, kWh}
+\nomenclature{\(vEff\)}{One way energy efficiency from charging ports to EV batteries or from EV batteries to charging ports}
+
+
+\printnomenclature
+
+Equation \ref{eq:1}-\ref{eq:disc} formulates the optimization problem of each optimization window of utility-controlled unidirectional controlled charging and bidirectional V2H. Optimization windows are nested where optimization results from the previous optimization window define the initial state of the following window. Neighboring optimization windows are overlapped, to reflect operation scheduling changes due to newly available information. 
+
+Equation\ref{eq:1} defines the objective of the linear optimization problem. The summation of L2 charging costs, and fast charging costs minus the summation of discharging savings is the total costs of operation. Equation \ref{eq:ini} defines the initial state of the optimization window. Equation \ref{eq:socrange} defines the allowed state of charge range in which the EV batteries can operate. Equation \ref{eq:charg} and Equation \ref{eq:disc} define the charging and discharging rates of the EV at hour $t$. For controlled charging, is 0 for every hour. For V2H, $DischargeUp_{t}$ is the smaller between home electricity consumption and minimum level-2 charging rate at $t$. $ChargeUp_{t}$ is 0 if the EV is not during a parking event of over 8 hours at home or work. $DischargeUp_{t}$ is 0 if the EV is not during a parking event of over 8 hours at home. 
+
+\subsection{Battery degradation model details}\label{sec:SIbatdeg}
+
+EV vehicle-to-home operations increase battery cycling, potentially reducing battery life \cite{bhoir_impact_2021,guo_impact_2019,kolawole_impact_2018}. We adopt BLAST-Lite, an aggregate of battery degradation models developed by Gasper \textit{et al.} 2023 \cite{gasper_degradation_2023}. The model is fitted to accelerated aging experiments of a wide range of Li-ion batteries. We perform the degradation analysis on our battery operation conditions for 3 Nickel Manganese Cobalt (NMC) Li-ion batteries and for 1 Lithium iron phosphate battery model (detailed information in Table \ref{table:batteries}. 
+
+\begin{table}[ht]
+    \centering
+    \caption{Detailed information of 4 mass-produced battery cells that we assess degradation on \cite{gasper_degradation_2023}. Gasper \textit{et al.} 2023 carried out accelerated aging experiments on these four types of battery cells, and developed degradation assessment models based on experiment data.}
+    \begin{tabular}{|l|llll|}
+    \hline
+        \textbf{Battery} & \textbf{Chemistry} & \textbf{Capacity class} & \textbf{Casing} & \textbf{Nominal voltage} \\ \hline
+        NMC\_A  & NMC111/Graphite & 75Ah & Pouch & 3.7V \\ 
+        NMC\_B1  & NMC111/Graphite & 50Ah & Pouch & 3.7V \\ 
+        NMC\_B2 & NMC111/Graphite & 50Ah & Pouch & 3.7V \\ 
+        LFP250Ah  & LFP/Graphite & 250Ah & Prismatic & 3.3V \\ \hline
+    \end{tabular}\label{table:batteries}
+\end{table}
+
+The Blast model selected the form of function and fitted parameters to each battery model, based on experiment data from accelerated aging tests \cite{gasper_degradation_2023}. Model inputs include hourly battery state of charge (SOC), and hourly temperature. The model assumes the temperature of batteries is the same as ambient temperature. And batteries reach their end-of-life at 70\% original capacity. 
+\subsubsection{Battery degradation model}
+\begin{align}
+    q& = 1- q_{Loss,cal} - q_{Loss,cyc}\\
+    q_{Loss,cal} =& \alpha_b(T_N,SOC,U_{aN}) * t^\beta_b\\
+    q_{Loss,cyc} =& \gamma_b(C,T_N,DOD) * EFC^\delta\\
+    x_a(SOC) =& 0.0085 + (0.78-0.0085)*(SOC)\\
+    U_{aN}(x_a) =& (0.6379 + 0.5416 * exp(-305.5309*x_a) \\
+    &+ 0.044* tanh(-(x_a-0.1958)/0.1088) - 0.1978*tanh((x_a-1.0571)/0.0854)\\
+                &-0.6875* tanh((x_a+0.0117)/0.0529) \\
+                &- 0.0175*tanh((x_a-0.5692)/0.0875)) / 0.123
+\end{align}
+\newline
+where $q$ is the remaining battery health, $q_{Loss,cal}$ is the battery health loss due to calendar aging, $q_{Loss,cyc}$ is the battery health loss due to cycling aging, $SOC$ is the state of charge (\%), $T_N$ is the normalized ambient temperature, $U_{aN}$ is the normalized graphite-to-reference potential, $x_a$ is the relative lithiation of the graphite. $C$ is the C rate of charging and discharging, and $DOD$ is the depth of discharge. $\alpha_b(p,T_N,SOC,U_{aN})$ is the rate of calendar aging function of battery model $b$, as a function of $T_N$, $SOC$ and $U_{aN}$. $\gamma_b$ is the rate of cycling aging function of battery model $b$, as a function of $C$ and $T_N$. $\alpha$ and $\gamma$ are fitted to experiment data of each battery model, and they differ in functional form, too. $\beta_b$ and $\delta$ are fitted parameters. 
+\newline
+
+\subsubsection{Battery degradation model for each battery model} 
+\subsubsection{$LFP250Ah$}
+\begin{align}
+    q =& 1- q_{Loss,cal} - q_{Loss,cyc}\\
+    q_{Loss,cal} =& \alpha_b(T_N,SOC,U_{aN}) * (t/10^5)^0.437\\
+    q_{Loss,cyc} =& \gamma_b(C,T_N) * (EFC/(2*10^4)^0.869\\
+    \alpha(T_N,SOC,U_{aN}) =& 3.11/10^3 * exp(4.27* (T_N)^3/ U_{aN}^{1/3})\\
+    \gamma(C,T_N) =& -0.8802 + 2.2 * exp((C^0.5)/(T_N)^2) -3.942 * C^0.5/(T_N)^2\\
+\end{align}
+\subsubsection{$NMC_A$}
+\begin{align}
+    q =& 1- q_{Loss,cal} - q_{Loss,cyc}\\
+    q_{Loss,cal} =& \alpha_b(T_N,SOC,U_{aN}) * (t/10^3)^0.578\\
+    q_{Loss,cyc} =& \gamma_b(C,T_N) * (EFC/(10^4)^1.11\\
+    \alpha(T_N,SOC,U_{aN})& = 8.71/10^7 * exp(10.04* (T_N)^3/ U_{aN}^{1/3})\\
+    \gamma(C,T_N) =& 2.67/10^2 +  1.64 * exp((T_N)^3*DOD^0.5) \\ &+1.099*10^{-2}*exp(T_N^{-0.5})*C^2 - 0.4404*exp(DOD^0.5)*(T_N)^2*C^0.5\\
+\end{align}
+\subsubsection{$NMC_{B1}$}
+\begin{align}
+    q& = 1- q_{Loss,cal} - q_{Loss,cyc}\\
+    q_{Loss,cal}& = \alpha_b(T_N,SOC,U_{aN}) * (t/10^4)^0.708\\
+    q_{Loss,cyc}& = \gamma_b(C,T_N) * (EFC/(10^5)^0.467\\
+    \alpha(T_N,SOC,U_{aN})=& 36.2 * exp(-4.4* (T_N)^3/ U_{aN}^{1/3})\\
+    \gamma(C,T_N) =& 0.844 * exp(DOD^2*(T_N)^3*C^0.5)^0.458\\
+\end{align}
+\subsubsection{$NMC_{B2}$}
+\begin{align}
+    q =& 1- q_{Loss,cal} - q_{Loss,cyc}\\
+    q_{Loss,cal} =& \alpha_b(T_N,SOC,U_{aN}) * (t/10^4)^0.584\\
+    q_{Loss,cyc} =& \gamma_b(C,T_N) * (EFC/(10^5)^0.907\\
+    \alpha(T_N,SOC,U_{aN}) =& 12 * exp(-3.91* (T_N)^3/ U_{aN}^{1/3})\\
+    \gamma(C,T_N) =& 2.2*10^9*(DOD*T_N^3*C^0.5)^11.9 * \\
+    &exp(-35.7*C^0.5/T_N^2) * exp(13.7*(DOD^2*C)/T_N^3)
+\end{align}
+\newpage
+\bibliography{references}
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,18 @@
+name: blast-lite
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - h5pyd
+  - numpy
+  - pandas
+  - matplotlib
+  - myst-parser
+  - scipy
+  - seaborn
+  - pytables
+  - ipykernel
+  - nrel-rex
+  - pip
+  - pip:
+    - geopy

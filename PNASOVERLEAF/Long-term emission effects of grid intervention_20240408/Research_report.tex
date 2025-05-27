@@ -1,0 +1,262 @@
+\documentclass[9pt,twocolumn,twoside,lineno]{pnas-new}
+% Use the lineno option to display guide line numbers if required.
+\usepackage{multirow}
+\usepackage{tabularray}
+\usepackage{cleveref}
+\usepackage{makecell}
+\usepackage{colortbl}
+\templatetype{pnasresearcharticle} % Choose template
+% {pnasresearcharticle} = Template for a two-column research article
+% {pnasmathematics} %= Template for a one-column mathematics article
+% {pnasinvited} %= Template for a PNAS invited submission
+\usepackage{array}
+\renewcommand*{\arraystretch}{1.1}
+\setlength{\extrarowheight}{2pt}
+
+% Multi-line left-aligned text with manual line breaks.
+% The base line is in centre.
+\newcommand*{\mline}[1]{%
+\begingroup
+    \renewcommand*{\arraystretch}{1.1}%
+   \begin{tabular}[c]{@{}>{\raggedright\arraybackslash}p{2cm}@{}}#1\end{tabular}%
+  \endgroup
+}
+\begin{document}
+
+
+\title{Electric Vehicles Can Reduce Power System Emissions with Utility-Controlled Charging by Incentivizing Wind and Solar Build-out}
+% Alt in the event the title above is deemed too long
+%\title{Controlled Electric Vehicle Charging Can Reduce Power System Emissions by Incentivizing Renewables}
+
+% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
+\author[a]{Jiahui Chen}
+\author[a]{Michael Craig}
+\author[b,c,d,*]{Jeremy Michalek}
+\author[b,e]{Matthew Bruchon}
+\author[a]{Parth Vaishnav}
+
+\affil[a]{School for Environment and Sustainability, University of Michigan}
+\affil[b]{Department of Engineering and Public Policy, Carnegie Mellon University}
+\affil[c]{Department of Mechanical Engineering, Carnegie Mellon University}
+\affil[d]{Department of Civil and Environmental Engineering, Carnegie Mellon University}
+\affil[e]{National Renewable Energy Laboratory}
+\affil[*]{Corresponding author}
+
+% Please give the surname of the lead author for the running footer
+\leadauthor{Chen}
+
+% Please add a significance statement to explain the relevance of your work
+\significancestatement{Understanding the climate and air quality implications of power system interventions, such as electric vehicle adoption, efficiency programs, or public policy, requires estimating the consequential emissions effects of the intervention. Current studies and policy analyses typically assume interventions can induce changes to power system operations but not to grid infrastructure investment or retirement. We find that accounting for induced investments can reverse the direction of the effect of an intervention: adding electric vehicles with controlled charging or vehicle-to-grid increases grid emissions when induced investments are ignored, but reduces grid emissions when induced investments are accounted for.}
+
+% Please include corresponding author, author contribution and author declaration information
+\authorcontributions{All authors contributed to designing the research, analyzing results and writing the paper. J.C. performed the research with input from coauthors.}
+\authordeclaration{Please declare any competing interests here.}
+%\equalauthors{\textsuperscript{1}A.O.(Author One) contributed equally to this work with A.T. (Author Two) (remove if not applicable).}
+\correspondingauthor{\textsuperscript{*}To whom correspondence should be addressed. E-mail: jmichalek\@cmu.edu}
+
+% At least three keywords are required at submission. Please provide three to five keywords, separated by the pipe symbol.
+\keywords{Electric vehicles $|$ Power system optimization $|$ Renewable power generation $|$ Vehicle to grid $|$ Greenhouse gas emissions $|$ Air pollution $|$ Externalities}
+
+\begin{abstract}
+
+We estimate the extent to which plug-in electric vehicle (PEV) adoption can induce new investment in wind and solar power capacity. We then estimate consequential power system emissions of PEV charging with and without these new investments. We study the PJM power system, the largest U.S. regional transmission operator with a grid mix similar to North America as a whole, with a 10\% PEV penetration. When PEVs are charged after the last trip of the day, grid emissions rise due to increased generation from existing fossil fuel generators, and renewable investment is limited by diminishing profits. But when PEVs use utility-controlled charging or bidirectional vehicle-to-grid capabilities they create economic incentives to increase wind and solar capacity investment by 3 GW and 15 GW, respectively. These incentives to invest in renewable capacity produce the result that adding more PEV charging load to the power grid can reduce overall power grid emissions externalities. 
+ 
+\end{abstract}
+
+\dates{This manuscript was compiled on \today}
+\doi{\url
+{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+
+% \firstpage[3]{3}{
+\firstpage[4]{3}
+
+\dropcap{T}he rapid adoption of plug-in electric vehicles (PEV) and the wide deployment of wind and solar power are at the center of climate actions of many major economies. Global PEV sales in 2023 exceeded 14 million, accounting for 15.8\% of all new car sales, up from 2.6\% in 2019 and 5\% in 2020 \cite{
+alsauskas_global_2024,noauthor_global_nodate-1}. With the steady decline of PEV costs and commitment to current and future PEV incentive policies, PEV sales will likely continue to grow in the coming decades \cite{alsauskas_global_2024,archsmith_future_2022}. Deployment of wind and solar power (referred to as WSP in short) has also grown significantly in recent years due to falling costs and policy support aimed at reducing power sector emissions \cite{gagnon_2022_2022,intergovernmental_panel_on_climate_change_ipcc_mitigation_2022}. In the U.S., wind and solar supplied 14\% of all electricity demand in 2022, up from 2\% in 2010.
+
+While expanding PEV fleets and growing wind and solar capacity are critical to mitigating climate change, they also make it more challenging to reliably balance electricity supply and demand \cite{wiser_impacts_2017,chen_impacts_2018,weis_consequential_2016}. Additionally, increasing wind and solar penetration can suppress electricity prices and thus reduce electricity revenues for generators, which could make it uneconomical to reach high levels of wind and solar penetration \cite{mills_impacts_2020,das_learning_2020,craig_retrospective_2018}. To overcome these challenges, load flexibility is key. PEVs have the potential to provide load flexibility through utility-controlled PEV charging and bidirectional vehicle-to-grid (V2G) technology \cite{bird_wind_2014,jones_renewable_2017,kroposki_achieving_2017,impram_challenges_2020,mai_getting_2022}, and this potential could substantially affect the power system emissions implications of growing PEV load. %In the face of these emerging technologies, it is vital for grid planners and climate policy makers to understand their effects on power system emissions both in the short term and in the long term, to align with decarbonization objectives of the wider economy. 
+
+Past studies estimating the consequential effect of PEV charging on power systems typically capture the effect of PEV load on power system operations while assuming the generation infrastructure is exogenous and unaffected by PEV load, as shown in \Cref{tab:method}'s left column \cite{tarroja_assessing_2016,nunes_displacing_2017,forrest_charging_2016,weis_emissions_2015,bruchon_cleaning_2024,holland_are_2016,holland_distributional_2019,holland_decompositions_2020,holland_why_2022,tu_electric_2020,wang_value_2021, shi_integration_2020,ryan_comparative_2016}. Gagnon et al. \citep{gagnon_short-run_2022} argue that this short-run approach is misleading because it misses the potential for PEV load to induce new wind and solar construction, fundamentally affecting the long term potential benefits of the transition to PEVs. To date, the few studies that have attempted to estimate the effect of PEV load on generator capacity have all used simplified or non-representative load profiles (which can have different implications for incentivizing wind and solar construction) and/or have excluded cases with controlled charging or vehicle to grid, as shown in \Cref{tab:method}'s right column \cite{brown_synergies_2018, owens_can_2022, manriquez_impact_2020,weis_estimating_2014,nopmongcol_air_2017,sheppard_private_2021,gagnon_planning_2022,jenn_emissions_2023,holland_regularization_2024} (a more detailed breakdown of this literature is provided in the Supplemental Information). 
+
+\input{Tables/LitReviewMatrixSimple}
+
+We bridge this gap by developing a model to estimate how power system generation capacity is endogenously affected by PEV load, controlled charging, and vehicle to grid (addressing the bottom-right corner of \Cref{tab:method}). We leverage a power systems optimization model of the PJM Interconnection -- the largest regional transmission organization in the United States serving 65 million people across 13 states and the District of Columbia with a grid mix similar to North America as a whole \cite{lueken_effects_2014,weis_emissions_2015,weis_consequential_2016,bruchon_cleaning_2024}. Based on PJM's Interconnection queue and capacity expansion study, we model the generation fleet with different wind and solar capacity levels. We simulate grid operations both with and without added PEV loads across these wind and solar capacity levels, and we identify maximum economical wind and solar capacity levels under each PEV load scenario. 
+
+We find that, with uncontrolled charging, transitioning 10\% of the vehicle fleet to PEVs increases power grid greenhouse gas and air pollutant emission externalities by 110 USD per MWh of PEV charging load in 2035 (or about 1.59 tons of $CO_2$ per vehicle or 1\% of overall power system externalities) by increasing generation from existing fossil fuel generators. Uncontrolled charging minimally increases investment in wind and solar capacity (only 300 MW increase). When capacity expansion is ignored, charging with V2G increases these emission externalities by 200 USD per MWh of PEV load (or about 2.31 tons of $CO_2$ per vehicle). However, when capacity expansion is modeled, charging with V2G \textit{reduces} power system air emission externalities by 800 USD per MWh of PEV load by increasing the levels of wind and solar capacity that are cost-effective to build by 23-27\%. Thus the ability of flexible PEV load to incentivize new wind and solar construction produces the result that adding additional demand for electricity can result in a net reduction in power system emissions. 
+
+%However, if only short-term operational changes are considered, V2G increases total environmental damages by 1\%. Besides environmental damages, we also find important changes to generation mix. Without considering capacity expansion induced by PEV loads, there is little change in VRE generation, whereas V2G only shifts among fossil fuel generators, from natural gas to coal. However, when considering induced VRE capacity expansion, V2G substitutes natural gas with increased VRE generation and increased coal generation.
+
+\section*{Results}
+
+We model PEVs with three kinds of charging behaviors: uncontrolled charging (UC), controlled charging (CC), and vehicle-to-grid (V2G). In uncontrolled charging, vehicles are fully charged as soon as plugged in at home at the end of the day. In controlled charging, charging is co-optimized with power system dispatch within constraints, such as requiring the vehicle to be fully charged before morning departure. In V2G, charging and discharging back to the grid is co-optimized with power system dispatch, within constraints. A more detailed description is provided in Section \ref{behav} and Section \ref{gridmodeling}.
+
+\subsection*{Wind and solar capacity investment induced by PEV charging}\label{result1}
+
+To capture the long-run effects of PEV charging on the power system, we calculate the maximum profitable wind and solar installation under each charging intervention scenario. Annual hourly power system operation is simulated to acquire short-term revenue results for wind and solar under a range of wind and solar capacity scenarios. The revenues are then compared with the annualized fixed cost associated the installed capacity. We define the maximum profitable capacity as the capacity for which revenue exceeds annualized fixed costs (variable generation costs are considered negligible for wind and solar). Aggregated results for wind and solar generators are depicted in Figure \ref{fig:capexp}. When wind or solar revenues equal total fixed costs (labeled intersection points in \ref{fig:capexp}), capacity achieves its maximum profitable level.
+
+In a baseline PJM system without PEVs, we estimate combined solar and wind capacity could reach 63.9 GW while maintaining profitability (Figure 1) assuming moderate projected wind and solar fixed cost through 2035 (55.9 to 70.8 GW at low and high projected wind and solar costs). Projected costs used to assess annualized fixed costs for wind and solar power are described in Section \ref{revenueassess}. Installed wind and solar capacity in PJM as of the end of 2023 totalled 22 GW, and 143 GW sit in the interconnection queue, indicating ample interest in further wind and solar deployment \cite{noauthor_pjm_nodate-3}. 
+Converting 10\% of vehicles to PEVs in PJM can significantly increase the maximum profitable capacity of wind and solar, depending on the charging strategy used. With uncontrolled charging, the maximum profitable capacity of wind and solar increases by only 300 MW, indicating PEV deployment with uncontrolled charging only induces negligible investment in wind or solar power. But with utility-controlled charging, the maximum profitable capacity of wind and solar increases by 2.8 GW (2.4 to 3.6 GW) for a total wind and solar capacity of 67 GW (55 to 77 GW). With V2G, the maximum profitable capacity of wind and solar capacity increase by 15 GW (14 to 17 GW) for a combined wind and solar capacity of 80 GW (66 to 90 GW). %Use of low or high cost estimates for wind and solar change these estimates by up to x\%. %Similar increases in revenue adequate wind and solar capacity occur under lower or higher capital cost reduction scenarios for wind and solar. These increases in maximum revenue adequate capacity of wind and solar PV are VRE capacity investment induced by PEV load and charging interventions.
+
+Uncontrolled PEV charging tends to add load when wind and solar generation is low, yielding little induced capacity investment. Conversely, utility-controlled charging of PEVs allows PEV load to be shifted to periods with low net demand, when wind and solar generation is high. Controlled charging thus reduces wind and solar curtailment and increases electricity prices in these hours, increasing revenues and making a larger level of wind and solar capacity investment profitable. V2G provides even greater flexibility than controlled charging, resulting in larger benefits for wind and solar revenue and inducing greater investment.
+
+\begin{figure*}[!ht]
+\centering
+\includegraphics[width=.85\linewidth]{Figures/perPEVcap_3.pdf}
+\caption{Effect of PEV charging load on the economics of wind and solar capacity investment. Top panel: Total revenues and total annualized fixed costs for solar and wind generators, by PEV and PEV charging intervention scenarios and by wind and solar fixed cost scenarios. (high): conservative fixed cost scenario, (mid): base case fixed cost scenario, (low): optimistic fixed cost scenario. Wind and solar are modeled together at a fixed ratio, as described. For each cost case we find the intersection of the annualized total fixed cost curve and the revenue curve, the intersection represents the maximum profitable total wind and solar capacity. Beyond this point additional wind or solar capacity cannot be added profitably. Bottom panel: Wind and solar capacity investment induced by PEV charging interventions, including uncontrolled charging (UC), controlled charging (CC) and vehicle-to-grid (V2G), relative to the NoPEV baseline scenario. Changes of the maximum profitable wind and solar capacity compared to the NoPEV baseline scenario are considered capacity investment induced by PEV and PEV charging interventions. Wind and solar capacity build-out is assumed to be fixed on a constant ratio. Further detailed methods are described in Section \ref{gridscenario}. }
+\label{fig:capexp}
+\end{figure*}
+
+\subsection*{Electricity generation induced by PEV charging}
+
+PEV charging affects power system electricity generation directly by increasing demand or, in the case of V2G, providing electricity storage to the grid, and it also affects generation indirectly through induced investment in wind and solar capacity (Figure \ref{fig:genmix}). Here, we separate these two factors by comparing two sets of scenarios that (1) ignore or (2) capture induced wind and solar investment by PEVs. Within each set of scenarios, we quantify the effect of PEVs on electricity generation by comparing scenarios with PEVs and different charging strategies to a reference scenario without PEVs. 
+
+When we ignore induced wind and solar capacity investment, PEVs with uncontrolled charging increase combined cycle natural gas generation by 6.4 TWh relative to the NoPEV case, or 1.1 MWh per MWh of PEV charging. As the uncontrolled charging demand roughly coincides with the daily load peaks, when renewable generation is low, PEV load is met with combined cycle natural gas generators. Little curtailment of wind and solar occurs (0.5\% of total generation), and uncontrolled charging does not align with curtailed renewables, so it does not mitigate curtailment. Controlled charging and V2G provide additional flexibility demand timing, allowing the system to use curtailed renewables. Due to low wind and solar curtailment rates, controlled charging only increases wind and solar generation by 0.18 MWh per MWh of PEV charging. Instead, controlled charging increases low-marginal-cost coal generation by 1.2 MWh, combined cycle natural gas generation by 2.0 MWh, and nuclear generation by 0.17 MWh per MWh of PEV charging. Demand flexibility enabled by controlled charging also leads to a 2.5 MWh reduction in high-marginal-cost gas turbine natural gas generation per MWh of PEV charging. Similar changes occur with V2G charging. V2G only increases wind and solar generation by 0.50 MWh and nuclear generation by 0.46 MWh per MWh of PEV charging, while increasing coal generation by 3.6 MWh, combined cycle natural gas generation by 0.84 MWh. Gas turbine natural gas generation is reduced by 4.4 MWh per MWh of PEV charging. 
+%charging demand is met with a combination of 80\% coal generation, 10\% wind and solar generation, and 10\% nuclear generation, and additional supply and demand flexibility enabled by V2G displaces 94\% of gas turbine generation.
+
+When we account for induced wind and solar capacity expansion, the effect of PEVs on the generation mix changes substantially under controlled charging and V2G scenarios but not under the uncontrolled charging scenario. Uncontrolled charging does not induced significant wind and solar capacity investment (0.2 GW, Figure \ref{fig:capexp}), so generation mix changes are the same when accounting for or ignoring induced wind and solar capacity investment. But controlled charging and V2G scenarios do induce wind and solar investment, resulting in increasing wind and solar generation that displaces coal- and gas-fired generation. With controlled charging, additional flexibility increases wind and solar generation by 1.3 MWh per MWh of PEV charging, coal generation by 0.80 MWh, and combined cycle natural gas generation by 1.4 MWh. Gas turbine generation is reduced by 2.4 MWh per MWh of PEV charging. With V2G, additional flexibility increases wind and solar generation by 7.7 MWh per MWh of PEV charging, and coal generation by 1.2 MWh. Gas turbine generation is reduced by 4.4 MWh, and combined cycle natural gas by 3.3 MWh per MWh of PEV driving.
+%With controlled charging, additional flexibility displaces 52\% of gas turbine natural gas generation, which is replaced mostly (54\%) by wind and solar generation as well as coal (33\%), combined cycle natural gas (10\%), and nuclear (3\%) generation. With V2G, additional flexibility displaces 94\% of gas turbine generation and 10\% of combined cycle natural gas generation, which is replaced by wind and solar (70\%), coal (27\%),and nuclear (3\%) generation. 
+
+\begin{figure*}
+\centering
+\includegraphics[width=.8\linewidth]{Figures/genmixjournal_6.pdf}
+\caption{Effect of PEV charging load on power generation. Changes in annual generation by fuel type, relative to the NoPEV case, for each PEV charging scenario when ignoring versus including induced wind and solar capacity investment. When accounting for induced wind and solar investment, Wind and solar capacity and therefore generation vary across PEV charging scenarios. 'CCNG' fuel type includes combined cycle natural gas generators. 'Other' fuel types include biomass, fossil waste, fuel cell, hydro, landfill gas, municipal solid waste, non-fossil waste, and oil or gas steam.}
+\label{fig:genmix}
+\end{figure*}
+
+\subsection*{Air emission externalities induced by PEV charging}
+
+PEV charging affects power system greenhouse gas (GHG) and local air pollutant emissions through its effect on induced capacity investment and electricity generation (\Cref{fig:emissionsperPEV}). We estimate externality costs of these emissions using a \$204 per mtCO$_2$eq social cost of carbon \cite{noauthor_epa_2023} and using the AP3 model for estimating air pollution-related mortality risk with a \$8.7M value of reduced mortality risk \cite{clay_external_2019}.
+
+When we ignore induced wind and solar capacity investment, PEV charging increases emissions externalities by increasing fossil-fuel generation (Figure \ref{fig:genmix}). As shown in \Cref{fig:emissionsperPEV} PEV adoption increases overall 2035 power system air emission externalities by \$330, \$240 or \$610 per PEV when charging is uncontrolled, utility-controlled, or V2G, respectively.
+
+When we account for induced wind and solar capacity investment, uncontrolled PEV charging still increases power system air emission externalities by \$330 per PEV, as before, but because utility-controlled charging and V2G induce new wind and solar capacity investment, PEV charging \textit{reduces} total power system air emission externalities by \$230 or \$2200 per PEV for controlled charging and V2G, respectively. 
+
+We note that alternative ``uncontrolled'' charging schedules, such as daytime charging rather than charging after the last trip of the day, could potentially create different incentives for wind and solar capacity investment, which could also affect consequential emissions of PEV charging without utility-controlled charging \cite{holland_regularization_2024}.
+
+% \begin{figure*}[!ht]
+% \centering
+% \includegraphics[width=.7\linewidth]{Figures/emidmg_7.pdf}
+% \caption{Annual environmental damages of GHG emissions and pollution, by different PEV and PEV charging intervention scenarios and analysis approaches. VRE capacity varies across PEV and PEV charging intervention scenarios in Expansion scenarios, as PEV and PEV charging intervention affects the maximum cost-effective VRE capacity installation. Environmental damages for GHG emissions are calculated with social cost of carbon of \$204/ton $CO_2e$ in 2023, published by US Environment Protection Agency\cite{noauthor_epa_2023}. The results with a lower cost of carbon of \$51/ton $CO_2e$ can be found in SI. The AP3 model is used to calculate those of pollutants.}
+% \label{fig:emisdmg}
+% \end{figure*}
+
+
+\begin{figure*}
+\centering
+\includegraphics[width=.8\linewidth]{Figures/perPEVemidmg_4.pdf}
+\caption{Effect of PEV charging on power system air emission externalities. Change in total power system air emission externalities per PEV and per MWh of PEV charging in 2035, relative to the NoPEV scenario, under each PEV charging scenario when ignoring versus including induced wind and solar capacity investment. The 'ignored' scenarios use generation portfolios given by PJM's grid planning study for 2035 \cite{pjm_energy_2021}. The 'included' scenarios consider wind and solar capacity at maximum profitable capacity, as described in Method and Materials. When induced wind and solar capacity investment is ignored, PEV load increases power system air emission externalities. When it is included, uncontrolled PEV load increases power system air emission externalities, but utility-controlled charging (CC) and vehicle-to-grid (V2G) scenarios induce enough wind and solar capacity investment to produce a net reduction in power system air emission externalities.}
+\label{fig:emissionsperPEV}
+\end{figure*}
+
+
+
+\section*{Discussion}
+
+We find that a 10\% increase in PJM PEV adoption does not induce additional wind and solar capacity investment when each vehicle is charged (uncontrolled) after the last trip of the day. But when PEV charge timing is utility-controlled to minimize cost, and especially when PEVs have bidirectional V2G capabilities, adding PEV load can increase profitable levels of wind and solar capacity investment so much that net power system air emissions externality costs actually drop. 
+
+Our estimates suggest that adoption of utility-controlled charging or V2G reduces the power system air emission externality cost consequences of PEV adoption by \$560 and \$2500 per PEV per year, respectively, in 2035 PJM, suggesting a policy rationale for incentivizing adoption of utility-controlled charging and V2G. Our estimates also suggest that consequential life cycle air emissions externalities of PEV adoption may be smaller than estimated in prior studies \cite{bruchon_cleaning_2024} if the PEVs use utility-controlled charging or V2G.
+
+Our estimates are based on optimal grid operations and optimal use of PEV charging flexibility. In practice, benefits may be somewhat lower because of limitations in the ability to forecast load, variable renewable generation, and PEV availability and to coordinate charging decisions among millions of PEV households. 
+
+Home chargers capable of receiving signals from a utility and adjusting the timing and rate of charging in response are needed to enable utility-controlled charging. For V2G, this term sometimes implies bidirectional flow to and from the power grid, which requires special grid connections typically unavailable at the household level. But the term V2G sometimes implies only bidirectional flow from the vehicle to the home to displace household load without requiring a bidirectional connection between the home and the power grid (also known as vehicle-to-home). Our analysis is agnostic to these V2G variations so long as household load exceeds vehicle discharge in the analysis. However, the V2G cases that we model implicitly assume bidirectional communication between the vehicle and the power grid, which is needed to determine whether PEVs are plugged in and how much headroom PEV batteries have to charge or discharge at a given moment. Development of such communication systems and algorithms to aggregate information and distribute control would be necessary to realize large V2G adoption of the type modeled here.
+
+We treat wind and solar together assuming a fixed 54\% to 46\% ratio based on the mix of wind and solar resources in the interconnection queue. Actual investment decisions may target wind and solar ratios more strategically, potentially resulting in larger effects than we estimate. Our estimated benefits are based on wind and solar investment decisions driven by economic viability. Other factors, such as national, state and local regulations, incentives, process delays, or political factors may also influence realized investment decisions in practice. For example, wind and solar PV projects make up 93\% of PJM's interconnection queue, but a growing backlog of new wind and solar project requests indicates the interest in investment is not matched by the actual build-out \cite{silverman_outlook_2024}.  %yet the capacity build-out is much behind schedule due to non-economic factors \cite{silverman_outlook_2024}. 
+Furthermore, we assume for simplicity, data availability and computational reasons that generation profiles and expansion costs are identical across all wind and across all solar generators, regardless of location. Location-resolved values could improve upon our estimates.
+
+We use the term ``long-run consequential emissions'' for our estimates and avoid the term ``long-run marginal emissions'' used in \cite{gagnon_short-run_2022} because marginal emissions are a special case of consequential emissions for which the change in question is a single unit (for discrete quantities or the derivative for continuous quantities) \cite{committee_on_current_methods_for_life_cycle_analyses_of_low-carbon_transportation_fuels_in_the_united_states_current_2022}. Our study involves a 10\% change in PEV adoption, which is too large to be considered marginal.
+
+%This study provides insights to policy makers as they evaluate PEV adoption and PEV charging interventions: PEV fleets have significant potential to induce investment in solar PV and wind generators and to reduce overall grid emissions. If the induced VRE capacity expansion is ignored, PEVs increase grid total environmental damages, and PEV charging intervention can increase environmental damages compared with uncontrolled charging. This suggests PEV charging intervention should not be incentivized for climate change mitigation or local pollution control, like many other work \cite{bruchon_cleaning_2024,hittinger_bulk_2015,brinkel_should_2020}. However, if induced VRE investment - which is a real impact that occurs in real-world but largely ignored - is accounted for, PEV charging intervention can reduce grid-scale damages compared with even the grid without PEV loads. This suggests PEV adoption combined with charging intervention should be incentivized now to boost VRE investment and reduce total environmental damages. 
+
+%To harness potential benefits provided by PEV charging interventions, conditions need to be met and institutional changes need to be made. Both controlled charging and V2G rely on home PEV chargers that enable control of rate and direction of energy flow. PEV manufacturers and power system operators need to work in joint force to develop and incentivize such home chargers. To enable large scale application of charging interventions, grid operators and utilities need to make institutional arrangements that benefit early adopters with easy access.
+ 
+%Though other forms of electrification and grid flexibility options differ from PEV adoption and PEV charging interventions in load patterns, they also hold the potential to induce wind and solar capacity expansion, which could reduce total emissions of the grid while increasing load. Regarded as core pathways to carbon neutrality, electrification of many sectors hold such potential. For instance, 
+
+We focus on PEV charging load, but other kinds of grid interventions with flexible load also have potential to induce wind and solar capacity investment. For example, building electrification with deployment of air source heat pumps can increase grid emissions due to additional load \cite{dai_life_2020,liu_energetic_2019,carroll_air_2020}; however, combined with load control, the additional load can incentivize solar and wind investment, which serves not only the heat pump load but also the rest of the power system, thus helping to facilitate the decarbonization of the whole power system. To harness the discussed benefits, it is suggested that power system operators and energy management service providers actively explore both the technical and economic viability and market designs for potential grid flexibility solutions. With mature business models, these grid flexibility solutions may help the power system reduce both costs and emissions in its transition to carbon neutrality.
+%This approach improves upon existing studies by combining operation cost model with long-term capacity expansion model. Existing studies use either long-term approach of capacity expansion models that simplifies operational constraints of grid intervention, or short-term approaches that do not account for the impacts to power system structure which proves to be significant. Our approach allows detailed model representation of grid intervention operation, and in the meantime it can provide quantitative evidence on emission effects of its long-term impacts.  
+
+% Compare our normalized consequential emissions with other studies: 
+% Only UC and CC results are available. Important grid-scale V2G studies discussed in lit review do not provide emission results (Brown, Owens).
+% 1) Holland 2020 assessed only uncontrolled charging
+% 2) Gagnon did not calculate PEV emission consequences
+% 3) Owens did not focus on emission consequences, but rather reduced needs for stationary storage by introducing V2G
+% 4) Matt's 24 paper 'Cleaning up..' does offer controlled charging and uncontrolled charging short-term emission assessments.
+
+%Despite the extensibility, our model has some limitations. Firstly, it cannot account for more real-world constraints to VRE capacity expansion such as political concern. Wind and solar PV projects make up 93\% of PJM's interconnection queue, yet the capacity expansion is much behind due to non-economic reasons.\cite{silverman_outlook_2024} As a result, the optimal capacity installation may not be reached. Though it offers important insights into the decarbonization value of grid intervention options through an economic lens. Furthermore, modeling of VRE expansion can be more detailed and realistic. In order to reduce computation complexity, we assume VRE generators all have the same historical output profile and the expansion cost is the same no matter the location. But the analysis can also be carried out with considerations of VRE resource abundance and site desirability. Overcoming these challenges would greatly enhance the usefulness and extensibility in its real-world application. 
+
+\matmethods{This study develops an approach to assess emission effects of grid intervention technologies in both power system operation and in power system structural changes. The analysis is based on a short-term power system operational cost model that has an embedded PEV behavioral module. The short-term model allows highly resolved representation of real-world PEV operational constraints. Then short-term operational results are translated to long-term capacity expansion decisions and thus inform long-term structural changes of the power system. In the end, emission changes in greenhouse gases (GHG) and local air pollutants are assessed considering the induced capacity expansion. As a case study, we analyze a 2035 version of the PJM Interconnection under three grid interventions: PEVs with uncontrolled charging, controlled charging, and vehicle-to-grid (V2G).
+
+
+
+
+\subsection{PEV behavioral model}\label{behav}
+
+As we use a short-term operational cost model to simulate power system operation, we are allowed higher granularity when it comes to mathematical abstraction of PEV operational constraints\cite{muratori_impact_2018,chen_emission_2022}. We model an electric light-duty vehicle (LDV) fleet that takes up 10\% of the LDV fleet in PJM. This PEV stock penetration is plausible, as PEV penetration in new light-duty vehicle sales is expected to reach 11\% in 2024 in the US, and the US market is expected to grow \cite{alsauskas_global_2024}. As computational power is limited, a simplifying assumption is made that the PEV fleet is made up of a generic PEV with a 300 mile (480 km) range. 
+
+We model three kinds of charging behaviors: uncontrolled charging, controlled charging, and vehicle-to-grid (V2G). When the electric vehicle charging is uncontrolled, they engage in convenience charging, meaning PEVs fully charge their battery at the maximum available charging rate at the end of each day at home. Under controlled charging, the PEVs are always plugged in and can be charged when parked. The charging schedule is co-optimized with the power system economic dispatch during the hours that the PEV is parked and plugged in and within battery capacity constraints. PEVs are required to be fully recharged before the first trip of the following day to be ready for travel. The third charging behavior is V2G. Under V2G, PEVs are always plugged in when parked and can participate in V2G. PEVs that participate V2G can release energy to or draw energy from the power grid, within operating constraints, allowing controlled charging rates to be negative. The detailed model representation of these operational constraints is described in SI.
+
+In order to represent PEV energy consumption and charging availability across the fleet, we use 15 weighted daily vehicle travel profiles from the National Household Travel Survey (NHTS) to represent 15 groups of PEVs with distinct driving profiles selected to mimic the behavior of the overall fleet as closely as possible, as described in Weis et al. 2014 \cite{weis_estimating_2014}. These daily driving profiles include the time of the first trip and the last trip of the day, hourly plugged-in availability, and hourly vehicle miles traveled of each hour of the day. The hourly plugged-in availability describes the proportion of PEVs in each PEV behavioral group that are parked and available for charging. Each PEV group has its distinctive driving behavioral pattern. Besides PEVs that are driven, we also model PEVs that are not driven on that day. NHTS dataset indicates 30\% of vehicles that were interviewed are not active and do not have travel records on the day of survey. Hence, we also a group of PEVs that do not have driving events for the day. For simplicity and due to data limitations, energy consumption profiles and availability profiles are assumed to be the same every day throughout the year for each group, and driving behavioral patterns are assumed to be homogeneous within each group. The total numbers of PEVs in each region of PJM is calculated as proportional to the region's population. %Inside each region, the number of PEVs in each group is determined with clustering analysis results discussed above, and the ratio of PEV numbers across PEV groups is assumed to be the same for all regions.
+We compared the 2009 NHTS dataset and the 2017 dataset and found that daily vehicle miles traveled per household did not change significantly, and thus we adopt the 2009 analysis used in \cite{weis_estimating_2014}.
+
+\subsection{Power system model}\label{gridmodeling}
+
+We run a unit commitment and economic dispatch (UCED) model to simulate the day-ahead energy market and reserve requirements of the PJM Interconnection. This model was first developed by Lueken et al. \cite{lueken_effects_2014} and later adapted by Weis et al. \cite{weis_emissions_2015,weis_consequential_2016} to incorporate electric vehicle battery charge tracking. The UCED model minimizes variable costs of generators including variable operation and maintenance costs, startup costs, and fuel costs in sliding 48-hour optimizing windows. After solving each window, the model accepts the results of the first 24 hours and moves forward by 24 hours until a full year's optimization is completed. Our UCED models the PJM Interconnection as 5 transmission-constrained regions, inside each of which there is assumed to be no transmission losses or constraints. In each region, energy demand is constrained to be equal to supply at every time step, and reserve requirements must be met. Operational characteristics of dispatchable generating units, including ramp rates, minimum uptime, and minimum downtime, are modeled through sets of constraints. The operation of solar and wind generators is also modeled, where excessive wind and solar generation can be curtailed when needed. 
+
+We incorporate each PEV charging scenario into the UCED model. PEV uncontrolled charging load is added to the baseload, as it is inflexible. PEVs with controlled charging and V2G are modeled similarly to storage units with limited availability: charging and discharging are limited by the hourly availability of PEVs that are plugged in, and they need to be fully charged before the first trip of the following day. As discussed in Section \ref{behav}, 30\% of PEVs do not have driving events on any given day. We model this group of PEVs as stationary storage with the same power capacity and energy capacity. During the day energy depletion from driving is modeled as energy drawn from batteries, realized through extra sets of constraints that track PEV battery states of charge and regulate their charging and discharging rates. The detailed model formulation can be found in the SI.
+
+\subsection{Power system scenarios and data sources}\label{gridscenario}
+
+Given expected wind and solar capacity growth in PJM's near-term plans and the fact that wind and solar account for most of PJM's interconnection queue \cite{pjm_energy_2021,noauthor_pjm_nodate-4}, we model a 2035 PJM power system by increasing wind and solar installed capacity from the current PJM system. We use a PJM system dataset that was first compiled by Weis et al. 2016 and updated by Bruchon et al. 2024 \cite{weis_consequential_2016,bruchon_cleaning_2024}. This dataset includes operational characteristics of dispatchable generators, including heat rate, capacity, location, variable operation and maintenance costs, ramp rates, minimum up and down time, startup cost, and minimum load from the U.S. Energy Information Administration (EIA) Form 860 and the National Electric Energy Data System (NEEDS) dataset from 2020 \cite{noauthor_form_nodate,us_epa_national_2018}. Retirement and new installations of dispatchable generators (mainly fossil fuel generators) are based on planned generator retirements and installations through the scenario year 2035 \cite{bruchon_cleaning_2024,noauthor_form_nodate}. This dataset also models 5.4 GW grid-scale storage units with existing storage units based on EIA Form 860 of 2020 and PJM's energy transition study \cite{pjm_energy_2021,noauthor_form_nodate}. PJM's DataMiner provides 2020 hourly wind and solar generation profiles, load profiles, and transfer limits across PJM \cite{noauthor_data_nodate}. Fuel prices for each fuel type are retrieved from EIA Form 923 for 2019\cite{noauthor_form_nodate-1}. 
+
+PJM's recent energy transition and grid planning study models a 'Policy' Scenario where wind and solar supply 22\% of total electricity consumption by 2035 with stated policies, and an 'Accelerated' Scenario where wind and solar supply 50\% of total electricity consumption by 2035\cite{pjm_energy_2021}. Active solar PV and wind projects in PJM's interconnection queue reached 207 and 103 GW, respectively, as of June 2024, indicating mounting interest in wind and solar development \cite{noauthor_pjm_nodate-4}. Based on PJM's 'Policy' and 'Accelerated' Scenarios and the PJM Interconnection queue, we create 25 high wind and solar penetration scenarios that increase wind and solar generation from 22\% to 46\% of demand (assuming no curtailment) in 1\% increments. Solar and wind capacities in our generator fleets range from 24 to 56 GW and 27 to 66 GW, respectively (Figure S1). To estimate hourly wind and solar generation for each of our 25 scenarios, we combine historic wind and solar output and installed capacity with wind and solar capacity expansion projections from PJM\cite{noauthor_pjm_nodate-2,pjm_energy_2021}. First, we spatially aggregate 2020 historic observed generation and capacity of solar PV and onshore wind from 20 control zones in PJM to our five regions\cite{noauthor_pjm_nodate-4}. For each of our five regions, we use generation and capacity to calculate hourly capacity factors for solar PV and wind by region. We assume the same capacity factors for onshore and offshore wind given a lack of historic generation data for offshore wind. Offshore wind only accounts for up to 15\% of wind and solar capacity in our scenarios. 
+
+To scale up wind and solar capacity to create each of our 25 scenarios, we assume the capacity ratio of future wind and solar projects types will remain the same as projected in PJM's energy transition study\cite{pjm_energy_2021}. 
+First, we use PJM interconnection queue to determine how the capacity expansion is distributed across regions for wind and solar, i.e. what percentage of wind and solar is installed in each of the 5 regions \cite{noauthor_pjm_nodate-4}. 
+The ratio of capacity installation of solar to wind for the whole PJM is determined using the PJM energy transition study \cite{pjm_energy_2021}, i.e. what is the ratio of solar capacity installation to wind capacity installation for the whole PJM. With this fixed ratio of wind and solar capacity, we scale up both two capacities until total wind and solar generation, calculated as regional capacity times regional capacity factor by generator type, equals the desired combined wind and solar penetration. 
+This method may overestimate future wind or solar capacity factors given that higher resource sites are likely to have already been developed, but efficiency gains in wind and solar technology will at least partly counteract this effect. 
+
+We run annual UCED simulations for all pairwise combinations of our 25 wind and solar scenarios and 4 PEV charging scenarios (no PEVs and PEVs with uncontrolled charging, controlled charging, and V2G, described in Section \ref{behav}), yielding 100 UCED simulations that allow us to quantify PEV impacts at varying wind and solar penetration levels and charging approaches. 
+
+%VRE generation profile: within each region, aggregate control zones for capcity factors; **. JIAHUI talk about how process raw data to hourly capacity factors. But ultimately, you get hourly capacity factors by control zone; 
+%you have 20 control zones
+%you have 5 wind & 5 solar generators in your UCED
+%each wind & solar generator corresponds to a singel reigon
+%you start w/ 40 CF timeseries - 20 control zones X 2 types of VRE (wind, solar)
+%so how do i go from 40 CF profiles to 10 CF profiles?
+%control zones are aggregated to regions; **JIAHUI explain HOW you aggregate to region. this needs to be clear for the EXISTING fleet and for the fleet afte ryou add VRE
+%JIAHUI: change from enumerated list to a paragraph
+
+\subsection{Air emission externality costs}
+We quantify operational stage power system greenhouse gas (GHG) and local air pollutant emissions and estimate consequent ai emission externality costs. Emission factors of GHGs and local air pollutants for each generator are retrieved from the National Emissions Inventory (NEI) \cite{us_epa_national_2015}. For generators that cannot be found in NEI, we substitute with the average emission factor in NEI based on the fuel type. To estimate air emission externality costs, we use a social cost of carbon of \$204/ton $CO_2e$ \cite{noauthor_epa_2023} for GHGs. For local air pollutants, we assesses emissions of sulfur dioxide (SO$_2$), nitrogen oxides (NO$_X$), ammonia (NH$_3$), fine particulate matter (PM$_{2.5}$), and volatile organic compounds (VOCs). Externality costs from local emissions are calculated on a spatially-explicit basis using the Air Pollution Emission Experiments and Policy (APEEP) model, version AP3 , and mortality risk is monetized using a \$8.7 million value of reduced mortality risk \cite{clay_external_2019}. 
+
+\subsection{Wind and solar capacity cost and revenue}\label{revenueassess}
+Solar and wind generators have negligible variable costs, and therefore marginal generating costs, in the short term. However, fixed costs, which equal annualized capital expenditures plus fixed operation and maintenance (O\&M) costs, need to be covered by revenues for wind and solar generators to maintain profitability. To assess the profitability of wind and solar generators, we define net profits as the sum of revenues minus annual fixed costs. We assume wind and solar generators have two revenue streams: income from the energy market and income from PJM's capacity market. 
+
+To estimate energy market revenues, we obtain hourly electricity prices for each of our five regions from our UCED model. These regional prices are the Lagrange multipliers of each region's energy balance constraint, which represent the marginal cost of supplying additional load in each region. By summing the product of hourly regional electricity prices and regional generation for wind and for solar, we determine total annual revenues by type in each region from the energy market. To estimate capacity market revenues, we use market mechanisms from PJM's capacity market, or its Reliability Pricing Model (RPM) \cite{pjm_pjm_2023}. Though the capacity value of wind and solar generators may decrease as penetration increases, it remains uncertain how the capacity market assesses the contribution of wind and solar sources \cite{mills_impacts_2020,bhagwat_effectiveness_2017}. PJM derates capacity offers from generators based on their effective load carrying capability (ELCC), which reflects generator variability and availability throughout the year. PJM sets the ELCC at 0.15, 0.40, 0.38 for onshore wind, offshore wind and solar PV, respectively \cite{noauthor_20232024_2021}. Wind ELCC is set at 0.233 as onshore wind accounts for one third of wind capacity expansion. We estimate wind and solar revenues from the capacity market as the product of capacity, the prior ELCC values (assuming the same value for onshore and offshore wind), and the latest average capacity market clearing price (USD 28.92/MW per day) \cite{noauthor_20232024_2021}. Regional wind and solar revenues and costs are summed to obtain PJM-wide revenues and costs, which we present in our results.
+
+We obtain fixed wind and solar costs from the National Renewable Energy Laboratory's Annual Technology Baseline (ATB) (SI \cite{vimmerstedt_2022_2022}) for year 2030. As we model year 2035, fixed costs at 2030 would be reasonably representative of fleet average, being the mid point between the present and the scenario year. To capture uncertainty in future wind and solar costs, we test the sensitivity of our results to conservative, best-guess, and optimistic ATB cost scenarios, which we refer to as high, mid, and low cost, respectively.\cite{bruchon_cleaning_2024}. 
+
+Between the 25 wind and solar capacity levels run for each PEV scenario, we interpolate wind and solar revenues. We find the intersection of fixed costs and revenues and Rround down the total capacity of wind and solar to the nearest point. And at that point the  combined wind and solar capacity installation reaches its maximum profitable level. 
+
+}
+
+\showmatmethods{} % Display the Materials and Methods section
+
+
+
+
+\acknow{This work was supported in part by the Department of Engineering and Public Policy and the Department of Mechanical Engineering at Carnegie Mellon University. Craig thanks the School for Environment and Sustainability at the University of Michigan for funding.}
+
+\showacknow{} % Display the acknowledgments section
+
+% \newpage
+%\bibsplit[15]
+%Use \bibsplit to split the references from the body of the text. Value "[2]" represents the number of reference in the left column (Note: Please avoid single column figures & tables on this page.)
+
+% Bibliography
+\bibliography{references}
+
+\end{document}

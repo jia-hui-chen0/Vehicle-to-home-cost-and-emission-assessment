@@ -1,0 +1,5 @@
+# This directory is a Syncthing folder marker.
+# Do not delete.
+
+folderID: ev7ry-eeebg
+created: 2024-07-24T11:35:12-04:00
