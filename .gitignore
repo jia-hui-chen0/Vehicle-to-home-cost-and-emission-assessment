@@ -23,6 +23,7 @@ CostEmissionAssessment/*res*/
 CostEmissionAssessment/intermediateresults*/
 CostEmissionAssessment/Deginterm*/
 CostEmissionAssessment/*plot*
+DegradationAssessment/visualization_degradation/
 degradation_agg_laptp.py
 degradation_agg.py
 degradatiom_cons
