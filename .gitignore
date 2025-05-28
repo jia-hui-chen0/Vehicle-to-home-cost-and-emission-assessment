@@ -16,6 +16,7 @@ Parth_request/
 S_checkconsumption/
 tempAdjusted_*/
 tempEV/
+Cambium/Fossilfuel prices
 CostEmissionAssessment/*fig*/
 CostEmissionAssessment/60ana/
 CostEmissionAssessment/Degfig/
@@ -115,6 +116,10 @@ coverage.xml
 
 # Rope
 .ropeproject
+
+# Exclude specific Cambium subdirectory from ignore rules
+!Cambium/hourly_balancingArea/
+!Cambium/hourly_balancingArea/**
 
 # Django stuff:
 *.log
