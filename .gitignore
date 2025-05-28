@@ -118,13 +118,14 @@ coverage.xml
 .ropeproject
 
 # Exclude specific Cambium subdirectory from ignore rules
-!Cambium/hourly_balancingArea/
-!Cambium/hourly_balancingArea/**
+
 
 # Django stuff:
 *.log
 *.pot
 *.csv
 
+!Cambium/hourly_balancingArea/
+!Cambium/hourly_balancingArea/**
 # Sphinx documentation
 docs/_build/
