@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Result_cc"
+		},
+		{
+			"path": "../Result_v2h"
+		},
+		{
+			"path": "../Results"
+		}
+	],
+	"settings": {}
+}

@@ -3,12 +3,66 @@ __pycache__/
 *.py[cod]
 # result visualization
 plot trb_results copy*
+plot trb_results*
+plot*
 activeness_1.py
+
+/Case stud*/
+CS */
 Haochi/
 Parth_request/
-PNASOVERLEAF/
+/PNASOVERLEAF/
+/GREET/
+S_checkconsumption/
+tempAdjusted_*/
+tempEV/
+CostEmissionAssessment/*fig*/
+CostEmissionAssessment/60ana/
+CostEmissionAssessment/Degfig/
+CostEmissionAssessment/*res*/
+CostEmissionAssessment/intermediateresults*/
+CostEmissionAssessment/Deginterm*/
+CostEmissionAssessment/*plot*
+degradation_agg_laptp.py
+degradation_agg.py
+degradatiom_cons
+dateharmonize
+Ana_script/
+Analysis/
 
-# 
+# Energy consumption directories - ignore contents but keep directories
+Energy consumption_adjusted*/*
+!Energy consumption_adjusted*/
+Energy consumption_ICEV*/*
+!Energy consumption_ICEV*/
+
+# ResStock directories - ignore contents but keep directories
+ResStock/indi_noelec_fossilfuel_10homes/*
+!ResStock/indi_noelec_fossilfuel_10homes/
+ResStock/Indi_Hourly_10homes/*
+!ResStock/Indi_Hourly_10homes/
+ResStock/Individuals_noelec_10homes/*
+!ResStock/Individuals_noelec_10homes/
+ResStock/Individuals_10homes/*
+!ResStock/Individuals_10homes/
+ResStock/Individuals_noelec/*
+!ResStock/Individuals_noelec/
+ResStock/indi_noelec_fossilfuel/*
+!ResStock/indi_noelec_fossilfuel/
+ResStock/Raw_noelec/*
+!ResStock/Raw_noelec/
+ResStock/Indi_Hourly/*
+!ResStock/Indi_Hourly/
+ResStock/Detroit csv/*
+!ResStock/Detroit csv/
+ResStock/Detroit check/*
+!ResStock/Detroit check/
+ResStock/Individuals/*
+!ResStock/Individuals/
+ResStock/indi_Hourly_noelec_err/*
+!ResStock/indi_Hourly_noelec_err/
+ResStock/Descriptive/*
+!ResStock/Descriptive/
 
 # C extensions
 *.so
