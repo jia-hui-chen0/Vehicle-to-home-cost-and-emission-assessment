@@ -64,13 +64,14 @@ Solve SCS using lp minimizing z ;
 
 execute_unload "results.gdx" sc fc vSOC sd; '''
     # root_loc = r'/nfs/turbo/seas-parthtv/jiahuic/Ford_CC'
-    root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
+    # root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
+    root_loc = r'C:\Users\jiahuic\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
     
     outputdir = root_loc
 
     vEff = 0.95 # charging efficiency
     vCR = [10,10] # charging rate
-    SOC = [28*3.3,153]
+    SOC = [82,153]
     faillst = []
     lst_vehnm = []
 
@@ -91,9 +92,10 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
     ctydf.set_index(keys=ctydf['county_num'],inplace=True)
 
     for county_num in range(num0,num1):
-        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1\\'+str(county_num))
-        fnames = [i for i in fnames if i[:6]=='0_0_0_']
-        fnames = [i for i in fnames if r'.csv' in i]
+        # fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1\\'+str(county_num))
+        # fnames = [i for i in fnames if i[:6]=='0_0_0_']
+        # fnames = [i for i in fnames if r'.csv' in i]
+        fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
 
         
         ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
@@ -102,8 +104,8 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
             fname = fnames[fname_i]
             cari = int(fname[2])
             tcnm = ['_SUV','_Truck'][cari]
-            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
             for year in [years]:
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
@@ -125,7 +127,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
 
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 fname_evhh = fname[:-8]+'_50'+fname[-4:]
 
@@ -138,7 +140,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                         vIni_val = SOC[cari]
                         for cyclei in range(ttncycle):
                             # ws = GamsWorkspace(system_directory=r'/home/jiahuic/Downloads/gams43.4_linux_x64_64_sfx')
-                            # ws = GamsWorkspace(system_directory=r'E:\GAMS\44',debug=DebugLevel.KeepFiles)
+                            # ws = GamsWorkspace(system_directory=r'F:\GAMS\44')
                             ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
 
                             db = ws.add_database()
@@ -200,11 +202,11 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                         except: pass
                         try: 
                             # os.mkdir(outputdir+r'\\Results_opt_3\\')
-                            os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\')
+                            os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_rev\\')
                         except: pass
-                        try: os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
+                        try: os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_rev\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
                         except: pass
-                        df_res.T.to_csv(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
+                        df_res.T.to_csv(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_rev\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
 if __name__ == '__main__':
     # all processes
     import warnings
@@ -212,7 +214,7 @@ if __name__ == '__main__':
     # CC(0,1,2040)
     a = 44
     b = 10
-    for yea in [2024,2040]:
+    for yea in [2024,2030,2040]:
         procs = []
         for i in range(a):
             if i != a-1:

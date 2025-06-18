@@ -1,3 +1,4 @@
+
 import pandas as pd 
 import numpy as np
 from datetime import datetime
@@ -6,74 +7,79 @@ from multiprocessing import Pool
 from os import getpid
 import time
 from multiprocessing import Process, Queue
-
+start_time = time.time()
 total = 0
 
 
-def ICEV(num0, num1):
+def soc_drop(num0, num1,urbi,lcci):
     import pandas as pd 
     import numpy as np
     from datetime import datetime
     import os
-    basedir = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
-    # basedir = r'E:\Dropbox (University of Michigan)\Ford_CC'
-    outdir = basedir
-    df_loc_1 = pd.read_csv(outdir + r'\\2020_Gaz_counties_national_0728_tempreg.csv')
-    uqlst = np.unique(df_loc_1['tempreg'])
-    
-    for county_num in range(num0,num1):
-        # if county_num not in [i for i in range(2310,2321)]:
-        try: os.mkdir(outdir+r'\\Energy consumption_ICEV_2\\'+str(county_num))
-        except:pass
-        ind = df_loc_1.index[county_num]
-        df_loc = df_loc_1[df_loc_1['tempreg']==uqlst[county_num]]
-        region = df_loc['Region'].to_list()[0]
-        driving_profile_foldername = basedir+r'\\Driving_profile_simu_trb\\Results\\'+region+'\\'
-        outputdir = outdir+r'\\Energy consumption_ICEV_2\\'+str(county_num)+'\\'
+    for county_num in range(num0,num1): # county num is now temp reg
         hr = pd.Timedelta(value=1,unit='hours')
-        yr = pd.read_csv(outdir+r'\\tempAdjusted\\'+str(uqlst[county_num])+'.csv')['0']
 
-        
-        nlst = [i for i in os.listdir(basedir + r'\\Driving_profile_simu_trb\Results\East North Central') 
-            if '0_0_0_' in i]
-        nlst = [i[:-4]  for i in nlst]
+        basedir = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC\\'
+
+        outdir = basedir
+        df_loc = pd.read_csv(outdir + r'2020_Gaz_counties_national_0728_tempreg.csv')
+        uqlst = np.unique(df_loc['tempreg'])
+        # ind = df_loc[df_loc['tempreg']==uqlst[county_num]]
+        # 16-20 avg
+        # lst_temp = []
+        region = df_loc[df_loc['tempreg']==uqlst[county_num]]['Region'].to_list()[0]
+        driving_profile_foldername = basedir+r'\\Driving_profile_simu_trb\\Results\\'+region+'\\'
+
         # MPGe fuel economy from fuel economy
-        # cty_lst = [1/26,1/25.4]ICEV
-        # hwy_lst = [1/34,1/31.3]
-        # HEV
-        cty_lst = [1/43,1/25.4]
-        hwy_lst = [1/36,1/31.3]
-        # URB mix, city and hwy
+        cty_lst = [127*82/28*100/330,78]
+        hwy_lst = [117*82/28*100/330,63]
+        yr = pd.read_csv(outdir+r'\\tempAdjusted\\'+str(county_num)+'.csv')['0'].to_numpy()
         # temp function
         def tempimpact(tem1):
-                                # temperature threshold cold
+            # temperature threshold cold
             TC = 15.5
             # temperature hot
             TH = 23.9
             if tem1 < TC:
-                coeT1 = 0.0064*(TC-tem1) + 1
+                coeT1 = 0.0242*(TC-tem1) + 1
             elif TC <=tem1<=TH:
                 coeT1 = 1
             elif TH <= tem1:
-                coeT1 = 0.0129*(tem1-TH) + 1
+                coeT1 = 0.0210*(tem1-TH) + 1
             return coeT1
-        for fname in nlst[17:30]:
-            df = pd.read_csv(driving_profile_foldername+fname+'.csv')
+        for fname in [i for i in os.listdir(driving_profile_foldername) if i[0:6]==str(urbi)+'_0_'+str(lcci)+'_']:
+        # for fname in [j for j in os.listdir(driving_profile_foldername) if j[0]==j[2]== '1' and j[4]=='0']:
+
+            df = pd.read_csv(driving_profile_foldername+fname)
+            df = df.loc[df['DAY']<=364]
             trp_num = df.shape[0] # total trip number
+
             cari = int(fname[2])
             urbi = int(fname[0])
             urban = urbi
-            if urban ==0:
-                hwyNT = 1/(0.00269+(1.235/(hwy_lst[cari])) )
+            #fe calculation
+            # change MPGe to kWh/mile
+            # change from lab to real-world (exclude temp impact)
+            if urban == 0:
+                cityOR = 33.70/cty_lst[cari]
                 # hwyOR = 33.70/hwy_lst[cari]
-                cityNT = 1/(0.00187+(1.134/(cty_lst[cari])) )
-                comb = hwyNT*0.45+cityNT*0.55
-            # elif urban ==2: # not in use
-            #     cityOR = 33.70/cty_lst[cari]
-            #     hwyOR = 33.70/hwy_lst[cari]
-            #     cityNT = 33.70/cty_lst[cari]*0.7 + 0.67*(cityOR-33.70/cty_lst[cari]*0.7)
-            #     hwyNT = 33.70/hwy_lst[cari]*0.7 + 0.87*(hwyOR - 33.70/hwy_lst[cari]*0.7)
-            #     comb = 0.45* hwyNT + 0.55*cityNT
+                cityNT = 33.70/cty_lst[cari]*0.7 + 0.67*(cityOR-33.70/cty_lst[cari]*0.7)
+                hwyOR = 33.70/hwy_lst[cari]
+                hwyNT = 33.70/hwy_lst[cari]*0.7 + 0.87*(hwyOR - 33.70/hwy_lst[cari]*0.7)
+                comb = (hwyNT*0.45+cityNT*0.55)
+            elif urban ==1:
+                hwyOR = 33.70/hwy_lst[cari]
+                hwyNT = 33.70/hwy_lst[cari]*0.7 + 0.87*(hwyOR - 33.70/hwy_lst[cari]*0.7)
+                cityOR = 33.70/cty_lst[cari]
+                # hwyOR = 33.70/hwy_lst[cari]
+                cityNT = 33.70/cty_lst[cari]*0.7 + 0.67*(cityOR-33.70/cty_lst[cari]*0.7)
+                comb = hwyNT*0.55+cityNT*0.45
+            elif urban ==2: # not in use
+                cityOR = 33.70/cty_lst[cari]
+                hwyOR = 33.70/hwy_lst[cari]
+                cityNT = 33.70/cty_lst[cari]*0.7 + 0.67*(cityOR-33.70/cty_lst[cari]*0.7)
+                hwyNT = 33.70/hwy_lst[cari]*0.7 + 0.87*(hwyOR - 33.70/hwy_lst[cari]*0.7)
+                comb = 0.45* hwyNT + 0.55*cityNT
             SDrops = []
             strhrs = []
             endhrs = []
@@ -112,7 +118,7 @@ def ICEV(num0, num1):
                 # hour number (8760)
                 strhrnum = day*24+int(strhr)
                 endhrnum = day*24+int(endhr)
-
+                
                 if endhrnum >= 8760:
                     endhrnum = endhrnum % 24+8736
                     strhrnum = strhrnum % 24+8736
@@ -121,6 +127,8 @@ def ICEV(num0, num1):
                 if endhrnum - strhrnum == 0:
                     # temperature of the hour
                     tem = yr[strhrnum]
+
+                    
                     coeT = tempimpact(tem)
                     SDrop = trpmile * comb *coeT
 
@@ -149,14 +157,18 @@ def ICEV(num0, num1):
             except: pass
             try: df.drop(columns=['Unnamed: 0'], inplace=True)
             except: pass
-            try: os.mkdir(outdir+r'//Energy consumption_ICEV_2//')
+            try: os.mkdir(outdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\')
             except: pass                
-            try: os.mkdir(outdir+r'//Energy consumption_ICEV_2//'+str(county_num))
+            try: os.mkdir(outdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num))
             except: pass
-            outputdir = outdir+r'//Energy consumption_ICEV_2//'+str(county_num)+'//'
-            df.to_csv(outputdir+fname+'.csv')
-            # print(str(county_num)+'_'+fname)
-    
+            outputdir = outdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num)+'\\'
+            df.to_csv(outputdir+fname[:-4]+'_0'+'_soc.csv')
+# if __name__ == '__main__':
+#     # all processes
+#     if rank <= 46:
+#         soc_drop(rank*5,rank*5+5)
+#     else:
+#         soc_drop(230+(rank-46)*4,230+(rank-46)*4+4)
 if __name__ == '__main__':
     # all processes
     # if rank <= 46:
@@ -166,14 +178,19 @@ if __name__ == '__main__':
     import warnings
     warnings.filterwarnings("ignore")
     procs = []
-    for i in range(48):
-        if i != 47:
-            p = Process(target=ICEV, args=([i*9,i*9+9]))
-        else:
-            p = Process(target=ICEV,args=([i*9,432]))
-        p.start()
-        procs.append(p)
-    for p in procs:
-        p.join() # this blocks until the process terminates
+    a=19
+    b=432//a
+    for urbi in range(1):
+        for lcci in range(1):
+            for i in range(a):
+                if i != a-1:
+                    p = Process(target=soc_drop, args=([i*b,i*b+b,urbi,lcci]))
+                else:
+                    p = Process(target=soc_drop,args=([i*b,432,urbi,lcci]))
+                p.start()
+                procs.append(p)
+            for p in procs:
+                p.join() # this blocks until the process terminates
+
 
     

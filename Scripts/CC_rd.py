@@ -65,9 +65,9 @@ Solve SCS using lp minimizing z ;
 
 execute_unload "results.gdx" sc fc vSOC; '''
     # root_loc = r'E:\Dropbox (University of Michigan)\Ford_CC'
-    root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
+    # root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
     # root_loc = r'G:\Dropbox (University of Michigan)\Ford_CC'
-
+    root_loc = r'F:\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
     # root_loc = r'E:\Dropbox (University of Michigan)\Ford_CC'
     
     outputdir = root_loc
@@ -88,18 +88,21 @@ execute_unload "results.gdx" sc fc vSOC; '''
         except:pass
         try:
             
-            os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year))
+            os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev')
             
         except:pass
     for year in years:
         ctydf.set_index(keys=ctydf['county_num'],inplace=True)
         for county_num in range(num0,num1):
-            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
+            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
             except:pass
-            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\1\FC_opp_SUV\\')
-            fnames = [i for i in fnames if i[:6]=='0_0_0_']
-            fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
-            fnames = [i for i in fnames if r'.csv' in i]
+            # 1st submission
+            # fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\1\FC_opp_SUV\\')
+            # fnames = [i for i in fnames if i[:6]=='0_0_0_']
+            # fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
+            # fnames = [i for i in fnames if r'.csv' in i]
+            # 2nd submission
+            fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
             ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
             countyBA = ctydf_1['reeds_ba'].to_list()[0]
             for fname_i in range(len(fnames)):
@@ -138,8 +141,8 @@ execute_unload "results.gdx" sc fc vSOC; '''
                 for cyclei in range(ttncycle):
                     # ws = GamsWorkspace(system_directory=r'/home/jiahuic/Downloads/gams43.4_linux_x64_64_sfx',debug=DebugLevel.KeepFiles)
                     # ws = GamsWorkspace(system_directory=r'E:\GAMS\41')
-                    # ws = GamsWorkspace(system_directory=r'E:\GAMS\44')
-                    ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
+                    ws = GamsWorkspace(system_directory=r'F:\GAMS\44')
+                    # ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
                     
                     db = ws.add_database()
                     vIni = db.add_parameter('vIni',0,'Inivial SOC in kWh')
@@ -196,7 +199,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                     # print(cyclei)
                             
                 df_res = pd.DataFrame(totalresults,index=['slowCR','fastCR','vSOC','sd'],columns=[i for i in range(8760)])
-                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+r'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
+                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
                 print(str(county_num)+"_"+str(fname))
                             
                         # except:faillst.append([county_num,fnames])

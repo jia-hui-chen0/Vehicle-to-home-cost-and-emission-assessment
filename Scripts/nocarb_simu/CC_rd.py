@@ -1,3 +1,5 @@
+# no missing 0612
+# wrong list, rerunning 0615
 import pandas as pd 
 import numpy as np
 from gams import *
@@ -88,18 +90,18 @@ execute_unload "results.gdx" sc fc vSOC; '''
         for county_num in range(num0,num1):
             try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
             except:pass
-            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\1\FC_opp_SUV\\')
+            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82_db\1\FC_opp_SUV\\')
             fnames = [i for i in fnames if i[:6]=='0_0_0_']
-            fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
-            fnames = [i for i in fnames if r'.csv' in i]
+            # fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
+            fnames = [i for i in fnames if r'.csv' in i][:15]
             ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
             countyBA = ctydf_1['reeds_ba'].to_list()[0]
             for fname_i in range(len(fnames)):
                 fname = fnames[fname_i]
                 cari = int(fname[2])
                 tcnm = ['_SUV','_Truck'][cari]
-                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
                 emission = cambium_df['srmer_co2e'].to_numpy()/1000
@@ -121,7 +123,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                 # slowCR = np.array([[hr, sc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 ttncycle = 36
                         

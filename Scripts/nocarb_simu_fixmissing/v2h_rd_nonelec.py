@@ -1,3 +1,4 @@
+# missing 0613
 # from mpi4py import MPI
 # import time
 
@@ -45,8 +46,8 @@ Variables
     fc.up(h) = fc_cr(h);
     sd.lo(h) = 0;
     sd.up(h) = sd_dr(h);
-    vSOC.lo(h) = 0.2 *82;
-    vSOC.up(h) = 0.8 * 82;
+    vSOC.lo(h) = 0.2*82;
+    vSOC.up(h) = 0.8*82;
     vSOC.fx(h) $ (ord(h) eq 1) = vIni;
 Equations
     cost      define objective function
@@ -70,7 +71,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
 
     vEff = 0.95 # charging efficiency
     vCR = [10,10] # charging rate
-    SOC = [28*3.3,153]
+    SOC = [82,153]
     faillst = []
     lst_vehnm = []
 
@@ -79,21 +80,30 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
     ctydf = pd.read_csv(outputdir+r'\\2020_Gaz_counties_national_0728_tempreg.csv')
     uqlst = np.unique(ctydf['tempreg'])
     try:
-        
         os.mkdir(outputdir+r'\\Result_v2h_no\\')
     except:pass
     try:
-        
-        os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year))
-        # try: os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+'\\'+str(county_num)+r'\\')
-        # except:pass
+        os.mkdir(outputdir+rf'\\Result_v2h_no\\Results_{year}_noelec_nocarb')
     except:pass
     ctydf.set_index(keys=ctydf['county_num'],inplace=True)
 
     for county_num in range(num0,num1):
-        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1\\'+str(county_num))
+        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82_db\\'+str(county_num))
         fnames = [i for i in fnames if i[:6]=='0_0_0_']
-        fnames = [i for i in fnames if r'.csv' in i]
+        # fnames = [i for i in fnames if r'.csv' in i][10:15]
+        # print(fnames)
+        fnames = ['0_0_0_18_0_soc.csv','0_0_0_19_0_soc.csv','0_0_0_20_0_soc.csv','0_0_0_21_0_soc.csv','0_0_0_22_0_soc.csv']
+
+        # for i1 in range(1):
+        #     for i2 in range(1):
+        #         result_dir = outputdir+r'\\Result_v2h_no\\Results_'+str(years)+r'_noelec_nocarb\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'
+        #         if os.path.exists(result_dir):
+        #             existing_files = os.listdir(result_dir)
+        #             fnames = [f for f in fnames if f[:-8]+'_50'+f[-4:] not in existing_files]
+        # if len(fnames)!=0:
+        #     print(fnames)
+        ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
+        countyBA = ctydf_1['reeds_ba'].to_list()[0]
 
         
         ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
@@ -102,14 +112,13 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
             fname = fnames[fname_i]
             cari = int(fname[2])
             tcnm = ['_SUV','_Truck'][cari]
-            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
             for year in [years]:
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
-                emission = cambium_df['srmer_co2e'].to_numpy()
                 cost = cambium_df['total_cost_enduse'].to_numpy()
-                cost = cost + emission*0.051
+                cost = cost
 
                 hr = [str(i+1) for i in range(8760)]
                 # slow charging fast charging decision variable domain
@@ -125,7 +134,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
 
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 fname_evhh = fname[:-8]+'_50'+fname[-4:]
 
@@ -200,11 +209,11 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                         except: pass
                         try: 
                             # os.mkdir(outputdir+r'\\Results_opt_3\\')
-                            os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\')
+                            os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_noelec_nocarb\\')
                         except: pass
-                        try: os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
+                        try: os.mkdir(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_noelec_nocarb\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
                         except: pass
-                        df_res.T.to_csv(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
+                        df_res.T.to_csv(outputdir+r'\\Result_v2h_no\\Results_'+str(year)+r'_noelec_nocarb\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
 if __name__ == '__main__':
     # all processes
     import warnings
@@ -212,7 +221,7 @@ if __name__ == '__main__':
     # CC(0,1,2040)
     a = 44
     b = 10
-    for yea in [2024,2040]:
+    for yea in [2024,2030,2040]:
         procs = []
         for i in range(a):
             if i != a-1:

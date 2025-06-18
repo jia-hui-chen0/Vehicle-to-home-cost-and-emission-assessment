@@ -176,30 +176,30 @@ if __name__ == '__main__':
     # else:
     #     soc_drop(230+(rank-46)*4,230+(rank-46)*4+4)
 
-    # import warnings
-    # warnings.filterwarnings("ignore")
-    # procs = []
-    # a=19
-    # b=432//a
-    # for i in range(a):
-    #     if i != a-1:
-    #         p = Process(target=soc_drop, args=([i*b,i*b+b]))
-    #     else:
-    #         p = Process(target=soc_drop,args=([i*b,432]))
-    #     p.start()
-    #     procs.append(p)
-    # for p in procs:
-    #     p.join() # this blocks until the process terminates
     import warnings
     warnings.filterwarnings("ignore")
     procs = []
-    for i in [3,4,5]:
-        p = Process(target=soc_drop, args=([i,i+1]))
-        
+    a=19
+    b=432//a
+    for i in range(a):
+        if i != a-1:
+            p = Process(target=soc_drop, args=([i*b,i*b+b]))
+        else:
+            p = Process(target=soc_drop,args=([i*b,432]))
         p.start()
         procs.append(p)
     for p in procs:
         p.join() # this blocks until the process terminates
+    # import warnings
+    # warnings.filterwarnings("ignore")
+    # procs = []
+    # for i in [3,4,5]:
+    #     p = Process(target=soc_drop, args=([i,i+1]))
+        
+    #     p.start()
+    #     procs.append(p)
+    # for p in procs:
+    #     p.join() # this blocks until the process terminates
 
 
     

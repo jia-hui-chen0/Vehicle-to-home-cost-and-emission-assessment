@@ -47,8 +47,8 @@ Variables
     sc.up(h) = sc_cr(h);
     fc.lo(h) = 0;
     fc.up(h) = fc_cr(h);
-    vSOC.lo(h) = 0.2 *60;
-    vSOC.up(h) = 0.8 * 60;
+    vSOC.lo(h) = 0.2 *82;
+    vSOC.up(h) = 0.8 * 82;
     vSOC.fx(h) $ (ord(h) eq 1) = vIni;
 Equations
     cost      define objective function
@@ -65,16 +65,16 @@ Solve SCS using lp minimizing z ;
 
 execute_unload "results.gdx" sc fc vSOC; '''
     # root_loc = r'E:\Dropbox (University of Michigan)\Ford_CC'
-    root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
+    # root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
     # root_loc = r'G:\Dropbox (University of Michigan)\Ford_CC'
-
+    root_loc = r'F:\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
     # root_loc = r'E:\Dropbox (University of Michigan)\Ford_CC'
     
     outputdir = root_loc
 
     vEff = 0.95 # charging efficiency
     vCR = [10,10] # charging rate
-    SOC = [60,153]
+    SOC = [82,153]
     faillst = []
     lst_vehnm = []
 
@@ -88,32 +88,38 @@ execute_unload "results.gdx" sc fc vSOC; '''
         except:pass
         try:
             
-            os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year))
+            os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev')
             
         except:pass
     for year in years:
         ctydf.set_index(keys=ctydf['county_num'],inplace=True)
-        for county_num in range(num0,num1):
-            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'\\')
+        if year == 2024:
+            num01 = num0+15
+        else:
+            num01 = num0
+        for county_num in range(num01,num1):
+            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
             except:pass
-            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
-            except:pass
-            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num))
-            fnames = [i for i in fnames if i[:6]=='0_0_0_']
-            fnames = [i for i in fnames if r'.csv' in i][:5]
+            # 1st submission
+            # fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82_db\1\FC_opp_SUV\\')
+            # fnames = [i for i in fnames if i[:6]=='0_0_0_']
+            # fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
+            # fnames = [i for i in fnames if r'.csv' in i]
+            # 2nd submission
+            fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
             ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
             countyBA = ctydf_1['reeds_ba'].to_list()[0]
             for fname_i in range(len(fnames)):
                 fname = fnames[fname_i]
                 cari = int(fname[2])
                 tcnm = ['_SUV','_Truck'][cari]
-                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
                 emission = cambium_df['srmer_co2e'].to_numpy()/1000
                 cost = cambium_df['total_cost_enduse'].to_numpy()/1000
-                cost = cost + emission*0
+                cost = cost + emission*0.051
 
                 hr = [str(i+1) for i in range(8760)]
                 # slow charging fast charging decision variable domain
@@ -130,7 +136,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                 # slowCR = np.array([[hr, sc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 ttncycle = 36
                         
@@ -139,8 +145,8 @@ execute_unload "results.gdx" sc fc vSOC; '''
                 for cyclei in range(ttncycle):
                     # ws = GamsWorkspace(system_directory=r'/home/jiahuic/Downloads/gams43.4_linux_x64_64_sfx',debug=DebugLevel.KeepFiles)
                     # ws = GamsWorkspace(system_directory=r'E:\GAMS\41')
-                    # ws = GamsWorkspace(system_directory=r'E:\GAMS\44')
-                    ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
+                    ws = GamsWorkspace(system_directory=r'F:\GAMS\44')
+                    # ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
                     
                     db = ws.add_database()
                     vIni = db.add_parameter('vIni',0,'Inivial SOC in kWh')
@@ -197,7 +203,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                     # print(cyclei)
                             
                 df_res = pd.DataFrame(totalresults,index=['slowCR','fastCR','vSOC','sd'],columns=[i for i in range(8760)])
-                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+r'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
+                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y82_'+str(year)+'_rev\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
                 print(str(county_num)+"_"+str(fname))
                             
                         # except:faillst.append([county_num,fnames])
@@ -208,33 +214,31 @@ if __name__ == '__main__':
     # all processes
             
     # CC(0,1,[2024])
-    # import warnings
-    # warnings.filterwarnings("ignore")
-    # procs = []
-    # a=16
-    # b=432//a
-    # for i in range(a):
-    #     if i != a-1:
-    #         p = Process(target=CC, args=([i*b,i*b+b,[2030,2040]]))
-    #     else:
-    #         p = Process(target=CC,args=([i*b,432,[2030,2040]]))
-    #     p.start()
-    #     procs.append(p)
-    # for p in procs:
-    #     p.join() # this blocks until the process terminates
-    # all processes
     import warnings
     warnings.filterwarnings("ignore")
-    a = 48
-    b = 9
     procs = []
-    for yea in [2024,2030,2040]:
-        for i in range(a):
-            if i != a-1:
-                p = Process(target=CC, args=([i*b,i*b+b,yea]))
-            else:
-                p = Process(target=CC,args=([i*b,432,yea]))
-            p.start()
-            procs.append(p)
-        for p in procs:
-            p.join() 
+    a=19
+    b=432//a
+    for i in range(a):
+        if i != a-1:
+            p = Process(target=CC, args=([i*b+8,i*b+b,[2030]]))
+        else:
+            p = Process(target=CC,args=([i*b+8,432,[2030]]))
+        p.start()
+        procs.append(p)
+    for p in procs:
+        p.join() # this blocks until the process terminates
+    # import warnings
+    # a = 48
+    # b = 9
+    # procs = []
+    # for yea in [2024,2030,2040]:
+    #     for i in range(a):
+    #         if i != a-1:
+    #             p = Process(target=CC, args=([i*b,i*b+b,yea]))
+    #         else:
+    #             p = Process(target=CC,args=([i*b,432,yea]))
+    #         p.start()
+    #         procs.append(p)
+    #     for p in procs:
+    #         p.join() 

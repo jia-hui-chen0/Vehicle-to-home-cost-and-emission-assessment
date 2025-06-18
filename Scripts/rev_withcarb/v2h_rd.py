@@ -63,8 +63,8 @@ Solve SCS using lp minimizing z ;
 
 execute_unload "results.gdx" sc fc vSOC sd; '''
     # root_loc = r'/nfs/turbo/seas-parthtv/jiahuic/Ford_CC'
-    # root_loc = r'G:\Dropbox (University of Michigan)\Ford_CC'
-    root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
+    # root_loc = r'F:\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
+    root_loc = r'C:\Users\jiahuic\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
     outputdir = root_loc
 
     vEff = 0.95 # charging efficiency
@@ -89,9 +89,10 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
     ctydf.set_index(keys=ctydf['county_num'],inplace=True)
 
     for county_num in range(num0,num1):
-        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num))
-        fnames = [i for i in fnames if i[:6]=='0_0_0_']
-        fnames = [i for i in fnames if r'.csv' in i][:15]
+        # fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num))
+        # fnames = [i for i in fnames if i[:6]=='0_0_0_']
+        # fnames = [i for i in fnames if r'.csv' in i][:15]
+        fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
 
         
         ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
@@ -104,13 +105,14 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
             fname = fnames[fname_i]
             cari = int(fname[2])
             tcnm = ['_SUV','_Truck'][cari]
-            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+            sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+            fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
             for year in [years]:
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
+                emission = cambium_df['srmer_co2e'].to_numpy()
                 cost = cambium_df['total_cost_enduse'].to_numpy()
-                cost = cost
+                cost = cost + emission*0.051
 
                 hr = [str(i+1) for i in range(8760)]
                 # slow charging fast charging decision variable domain
@@ -126,7 +128,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
 
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 fname_evhh = fname[:-8]+'_50'+fname[-4:]
 
@@ -139,7 +141,7 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                         vIni_val = SOC[cari]*0.8
                         for cyclei in range(ttncycle):
                             # ws = GamsWorkspace(system_directory=r'/home/jiahuic/Downloads/gams43.4_linux_x64_64_sfx')
-                            # ws = GamsWorkspace(system_directory=r'E:\GAMS\41',debug=DebugLevel.KeepFiles)
+                            # ws = GamsWorkspace(system_directory=r'F:\GAMS\44')
                             ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
 
 
@@ -200,18 +202,19 @@ execute_unload "results.gdx" sc fc vSOC sd; '''
                                   sum(np.array(results[1])*(cost/1000+0.275)[cyclei*24*10:8760])/0.95-
                                   sum(np.array(results[3])*(cost/1000+0.075)[cyclei*24*10:8760])*0.95)
                         df_res = pd.DataFrame(totalresults,index=['slowCR','fastCR','vSOC','sd'],columns=[i for i in range(8760)])
+                        # try: 
+                        #     # os.mkdir(outputdir+r'\\Results_opt_3\\')
+                        #     os.mkdir(outputdir+r'\\Result_v2h\\')
+                        # except: pass
                         try: 
                             # os.mkdir(outputdir+r'\\Results_opt_3\\')
-                            os.mkdir(outputdir+r'\\Result_v2h\\')
+                            os.mkdir(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_rev\\')
                         except: pass
-                        try: 
-                            # os.mkdir(outputdir+r'\\Results_opt_3\\')
-                            os.mkdir(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_nocarb\\')
+                        try: os.mkdir(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_rev\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
                         except: pass
-                        try: os.mkdir(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_nocarb\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\')
-                        except: pass
-                        df_res.T.to_csv(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_nocarb\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
+                        df_res.T.to_csv(outputdir+r'\\Result_v2h\\Results_80_Y82_'+str(year)+r'_rev\\'+str(county_num)+'_'+str(i1)+'_'+str(i2)+r'\\'+fname_evhh)
                         # except:faillst.append([county_num,fnames])
+            print(costttl)
     # faildf = pd.DataFrame(faillst,columns=['county_num','fnames'])
     # faildf.to_csv(outputdir+'\\failure_'+str(year)+str(num0)+'_'+str(num1)+'.csv')
 if __name__ == '__main__':

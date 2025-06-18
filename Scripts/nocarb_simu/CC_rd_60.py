@@ -1,3 +1,5 @@
+# done running 0609
+# missing 5-15, rerunning 0615
 import pandas as pd 
 import numpy as np
 from gams import *
@@ -83,7 +85,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
     ctydf = pd.read_csv(outputdir+r'\\2020_Gaz_counties_national_0728_tempreg.csv')
     
     uqlst = np.unique(ctydf['tempreg'])
-    for year in years:
+    for year in [years]:
         try: os.mkdir(outputdir+r'\\Result_cc\\')
         except:pass
         try:
@@ -91,24 +93,30 @@ execute_unload "results.gdx" sc fc vSOC; '''
             os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year))
             
         except:pass
-    for year in years:
+    for year in [years]:
         ctydf.set_index(keys=ctydf['county_num'],inplace=True)
         for county_num in range(num0,num1):
-            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'\\')
+            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'_nocarb\\')
             except:pass
-            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
+            try: os.mkdir(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+'_nocarb\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\')
             except:pass
-            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num))
+            fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y60_db\\'+str(county_num))
             fnames = [i for i in fnames if i[:6]=='0_0_0_']
-            fnames = [i for i in fnames if r'.csv' in i][:5]
+            # fnames = [i for i in fnames if r'.csv' in i][5:15]
+            fnames = [
+        '0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv',
+        '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv',
+        '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv',
+        '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv'
+            ]
             ctydf_1 = ctydf[ctydf['tempreg']==uqlst[county_num]]
             countyBA = ctydf_1['reeds_ba'].to_list()[0]
             for fname_i in range(len(fnames)):
                 fname = fnames[fname_i]
                 cari = int(fname[2])
                 tcnm = ['_SUV','_Truck'][cari]
-                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
-                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
+                sc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y60_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)['slowCR'].to_numpy()
+                fc_crarr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y60_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)['fastCR'].to_numpy()
                 # electricity price (supplier)
                 cambium_df = pd.read_csv(outputdir+r'\\Cambium\\hourly_balancingArea\\' + countyBA +'_'+str(year)+'.csv')
                 emission = cambium_df['srmer_co2e'].to_numpy()/1000
@@ -130,7 +138,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                 # slowCR = np.array([[hr, sc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # fastCR = np.array([[hr, fc_crarr[i]] for i in range(len(hr))], dtype=object)
                 # hourly SOC drop
-                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y82\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
+                soc_drop = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_2_Y60_db\\"+str(county_num)+"\\"+fname)['SOC'].to_numpy()
                 soc_drop = dict(zip(hr,soc_drop))
                 ttncycle = 36
                         
@@ -197,7 +205,7 @@ execute_unload "results.gdx" sc fc vSOC; '''
                     # print(cyclei)
                             
                 df_res = pd.DataFrame(totalresults,index=['slowCR','fastCR','vSOC','sd'],columns=[i for i in range(8760)])
-                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+r'\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
+                df_res.T.to_csv(outputdir+r'\\Result_cc\\Results_Y60_'+str(year)+r'_nocarb\\'+str(county_num)+'_'+str(0)+'_'+str(0)+r'\\'+fname)
                 print(str(county_num)+"_"+str(fname))
                             
                         # except:faillst.append([county_num,fnames])
@@ -228,7 +236,7 @@ if __name__ == '__main__':
     a = 48
     b = 9
     procs = []
-    for yea in [2024,2030,2040]:
+    for yea in [2024]:
         for i in range(a):
             if i != a-1:
                 p = Process(target=CC, args=([i*b,i*b+b,yea]))

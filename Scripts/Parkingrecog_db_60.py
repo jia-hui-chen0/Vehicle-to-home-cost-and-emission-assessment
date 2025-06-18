@@ -57,14 +57,14 @@ def Parkingrecog(num0, num1):
 
     for county_num in range(num0,num1):
         
-        flst = os.listdir(outdir+r'\\Energy consumption_adjusted_1_1_Y82_db\\'+str(county_num)+'\\')
+        flst = os.listdir(outdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num)+'\\')
         flst = [i for i in flst if '.csv' in i]
         for fname in flst:
             cari = int(fname[2])
             urbi = int(fname[0])
             trucknm = ['SUV','Truck'][cari]
 
-            df0 = pd.read_csv(outdir+r'\\Energy consumption_adjusted_1_1_Y82_db\\'+str(county_num)+'\\'+fname)
+            df0 = pd.read_csv(outdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num)+'\\'+fname)
             # by driving event, create parking event
             trpnum = df0.shape[0]
             parkevt = []

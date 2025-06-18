@@ -42,7 +42,7 @@ def CC(num0,num1,years):
         try:
             os.mkdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y60_db\\'+str(county_num)+'\\SC_opp_Truck\\')
         except:pass
-        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_1_Y82_db\\'+str(county_num))
+        fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num))
         fnames = [i for i in fnames if (r'.csv' in i)]
         # fnames = [i for i in fnames if i[0:6]=='0_0_0_']
         # fnames = [i for i in fnames if (r'.csv' in i) & (i[2]=='0' and i[0] =='0' and i[4]=='0')]
@@ -58,9 +58,9 @@ def CC(num0,num1,years):
             cari = int(fname[2])
             # vehi =int(veh_fname[6:])
             tcnm = ['_SUV','_Truck'][cari]
-            df0 = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_1_Y82_db\\'+str(county_num)+r'\\'+fname)
-            sc_hr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_1_Y82_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)
-            fc_hr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_1_Y82_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)
+            df0 = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_1_Y60_db\\'+str(county_num)+r'\\'+fname)
+            sc_hr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_1_Y60_db\\"+str(county_num)+"\\SC_opp"+tcnm+'\\'+fname)
+            fc_hr = pd.read_csv(outputdir + r"\\Energy consumption_adjusted_1_1_Y60_db\\"+str(county_num)+"\\FC_opp"+tcnm+'\\'+fname)
             for year in [years]:
 
 

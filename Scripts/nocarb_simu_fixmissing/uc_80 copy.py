@@ -58,21 +58,19 @@ execute_unload "results.gdx" sc fc vSOC; '''
 def UC(num0,num1):
     lst_vehnm = []
     # root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC\\'
-    root_loc = r'F:\University of Michigan Dropbox\Jiahui Chen\Ford_CC'
+    root_loc = r'C:\Users\jiahuic\Dropbox (University of Michigan)\Ford_CC'
     outputdir = root_loc
     vEff = 0.95 # charging efficiency
     vCR = 10 # charging rate
     SOC = [82,153]
-    # fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\1\FC_opp_SUV\\')
-    # fnames = [i for i in fnames if r'.csv' in i]
-    fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
+    fnames = os.listdir(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\1\FC_opp_SUV\\')
+    fnames = [i for i in fnames if r'.csv' in i]
     faillst = []
     for county_num in range(num0,num1):
         try:os.mkdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')
         except:pass
         
-        # fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
-        fnames = ['0_0_0_0_0_soc.csv', '0_0_0_10_0_soc.csv', '0_0_0_11_0_soc.csv', '0_0_0_12_0_soc.csv', '0_0_0_13_0_soc.csv', '0_0_0_14_0_soc.csv', '0_0_0_15_0_soc.csv', '0_0_0_16_0_soc.csv', '0_0_0_17_0_soc.csv', '0_0_0_18_0_soc.csv', '0_0_0_19_0_soc.csv', '0_0_0_1_0_soc.csv', '0_0_0_20_0_soc.csv', '0_0_0_21_0_soc.csv', '0_0_0_22_0_soc.csv']
+        fnames = [i for i in fnames if i not in os.listdir(outputdir+r'\\Results\Results_80_82\\'+str(county_num)+r'\\')]
         for fname in fnames:
             cari = int(fname[2])
             urbi = int(fname[0])
@@ -80,14 +78,14 @@ def UC(num0,num1):
 
             if cari==0 and urbi ==0 and lcci==0:
                 tcnm = ['_SUV','_Truck'][cari]
-                df0 = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_1_Y82_db\\'+str(county_num)+r'\\'+fname)
+                df0 = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_1_Y82\\'+str(county_num)+r'\\'+fname)
 
                 vCap = SOC[cari]
                 thresh = 8 # 8 hour parking
 
-                ws = GamsWorkspace(system_directory=r'F:\GAMS\44')
+                # ws = GamsWorkspace(system_directory=r'E:\GAMS\41')
                 # ws = GamsWorkspace(system_directory=r'E:\GAMS\41',debug=DebugLevel.KeepFiles)
-                # ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
+                ws = GamsWorkspace(system_directory=r'C:\GAMS\42')
                 ### Parameter prep 
                 def whyto(x):
                     if x in [1,97]:
@@ -163,7 +161,7 @@ def UC(num0,num1):
                     for k in range(strhr,endhr):
                         lst_chg.append(k+1)
                 # UC charging demand, apply high penalty to fast charging
-                fc_hr = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_2_Y82_db\\'+str(county_num)+r'\\'+r'FC_opp'+tcnm+r'\\'+fname)
+                fc_hr = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num)+r'\\'+r'FC_opp'+tcnm+r'\\'+fname)
                 hr = [str(i+1) for i in range(8760)]
                 # slow charging fast charging decision variable domain
                 sc_crarr = np.zeros(8760)
@@ -183,7 +181,7 @@ def UC(num0,num1):
                 fc_ec = fc_ecarr
                 fastEC = dict(zip(hr,fc_ec))
                 #   hourly SOC drop
-                soc_drop_df = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_2_Y82_db\\'+str(county_num)+r'\\'+fname)
+                soc_drop_df = pd.read_csv(outputdir+r'\\Energy consumption_adjusted_1_2_Y82\\'+str(county_num)+r'\\'+fname)
                 soc_drop = soc_drop_df['SOC'].to_numpy()
                 # soc_drop_df = df0
                 # soc_drop = np.zeros(8760)
@@ -231,13 +229,13 @@ def UC(num0,num1):
                     results.append(result)
                 if results[2][1]!=82*0.3:
                     df_res = pd.DataFrame(results,index=['slowCR','fastCR','vSOC'],columns=[i for i in range(8760)])
-                    try:os.mkdir(outputdir+r'\\Results\\Results_80_82_rev\\')
+                    try:os.mkdir(outputdir+r'\\Results\\Results_80_82_1\\')
                     except:pass
                     try:
-                        os.mkdir(outputdir+r'\\Results\\Results_80_82_rev\\'+str(county_num)+r'\\')
+                        os.mkdir(outputdir+r'\\Results\\Results_80_82_1\\'+str(county_num)+r'\\')
                     except:
                         pass
-                    df_res.T.to_csv(outputdir+r'\\Results\\Results_80_82_rev\\'+str(county_num)+r'\\'+fname)
+                    df_res.T.to_csv(outputdir+r'\\Results\\Results_80_82_1\\'+str(county_num)+r'\\'+fname)
                 
 if __name__ == '__main__':
     # UC(0,1)
